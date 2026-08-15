@@ -53,15 +53,18 @@ GitHub repository = permanent source of truth
 -Ananas/
 ├── .devcontainer/       # GitHub Codespaces / Dev Container configuration
 ├── .github/             # GitHub automation and repository guidance
+├── benchmarks/          # Reproducible coding-model/agent evaluations
 ├── config/              # Safe configuration templates (no secrets)
-├── docs/                # Architecture, roadmap, and operating documentation
+├── docs/                # Architecture, setup, roadmap, and cost strategy
 ├── scripts/             # Bootstrap, health-check, and maintenance scripts
-├── src/                 # Application/source code (introduced as the platform evolves)
-├── tests/               # Automated tests
+├── src/                 # Application/source code
+├── tests/               # Automated product tests
 ├── .editorconfig
 ├── .env.example
 ├── .gitignore
+├── CONTRIBUTING.md
 ├── LICENSE
+├── SECURITY.md
 └── README.md
 ```
 
@@ -71,7 +74,7 @@ GitHub repository = permanent source of truth
 
 From this repository, select **Code → Codespaces → Create codespace on main**.
 
-The included Dev Container configuration installs the baseline development tools automatically.
+The included Dev Container configuration installs/configures the baseline development environment automatically.
 
 ### 2. Configure secrets
 
@@ -87,12 +90,14 @@ A safe template is provided in `.env.example`.
 ### 3. Validate the environment
 
 ```bash
-./scripts/healthcheck.sh
+bash scripts/healthcheck.sh
 ```
 
 ### 4. Configure Continue
 
-Use the templates and guidance under `config/` and `docs/`. Provider credentials must remain external to the repository.
+The Codespace bootstrap copies the safe repository template to `~/.continue/config.yaml` when no local Continue config exists. Provider credentials must remain external to the repository.
+
+See [`docs/SETUP.md`](docs/SETUP.md) for the controlled setup sequence.
 
 ## Initial Development Stack
 
@@ -103,7 +108,7 @@ Use the templates and guidance under `config/` and `docs/`. Provider credentials
 | AI coding interface | Continue |
 | Primary model route | NVIDIA Nemotron |
 | Alternate route | OpenRouter |
-| Runtime | Node.js 22 + Python 3 |
+| Runtime | Node.js + Python 3 |
 | Cloud deployment | Google Cloud |
 | Source control | GitHub |
 | Secrets | Codespaces secrets / environment variables |
@@ -115,15 +120,18 @@ Use the templates and guidance under `config/` and `docs/`. Provider credentials
 - Use least-privilege credentials for GitHub and Google Cloud integrations.
 - Keep provider endpoints and model names configurable rather than embedded throughout source code.
 
-See [`SECURITY.md`](SECURITY.md) for reporting and operational guidance.
+See [`SECURITY.md`](SECURITY.md).
 
 ## Status
 
 **Phase 0 — Foundation / bootstrap**
 
-The repository is being established as the control plane for Ananas. The next phases introduce provider routing, reproducible benchmark tasks, agent workflows, CI, and Google Cloud deployment targets.
+The repository is established as the control plane for Ananas. The next phases introduce validated provider connectivity, reproducible benchmark tasks, agent workflows, telemetry/cost controls, and Google Cloud deployment targets.
 
-See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- Setup: [`docs/SETUP.md`](docs/SETUP.md)
+- Cost strategy: [`docs/COST_STRATEGY.md`](docs/COST_STRATEGY.md)
+- Roadmap: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
 ## License
 
