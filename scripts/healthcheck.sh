@@ -35,6 +35,18 @@ has_continue_secret OPENROUTER_API_KEY && echo '✓ OPENROUTER_API_KEY available
 printf '\nContinue configuration:\n'
 [[ -f "$HOME/.continue/config.yaml" ]] && echo '✓ ~/.continue/config.yaml present' || echo '○ ~/.continue/config.yaml not present yet'
 
+printf '\nWeb product:\n'
+if [[ -f package.json ]]; then
+  echo '✓ package.json present'
+  if [[ -d node_modules/three && -d node_modules/next ]]; then
+    echo '✓ Next.js + Three.js dependencies installed'
+  else
+    echo '○ Web dependencies not installed yet — run npm install'
+  fi
+else
+  echo '○ Web product package.json not present'
+fi
+
 printf '\nRepository:\n'
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   printf '✓ Git repository: %s\n' "$(git config --get remote.origin.url || echo local)"
