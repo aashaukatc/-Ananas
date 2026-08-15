@@ -1,10 +1,10 @@
 # Upstream Reuse Policy
 
-Ananas is intentionally built around composition rather than wholesale vendoring. Mature upstream capabilities should be reused where they reduce engineering work without taking ownership of entire external codebases.
+Ananas is intentionally built around **composition rather than wholesale vendoring**. Mature upstream capabilities should be reused where they reduce engineering work without forcing Ananas to own entire external codebases.
 
 ## Canonical registry
 
-Machine-readable pins live in [`config/upstreams.yaml`](../config/upstreams.yaml).
+Machine-readable policy and exact reviewed pins live in [`config/upstreams.yaml`](../config/upstreams.yaml).
 
 | Repository | Tier | Role | Policy |
 |---|---:|---|---|
@@ -14,25 +14,49 @@ Machine-readable pins live in [`config/upstreams.yaml`](../config/upstreams.yaml
 | `modelcontextprotocol/servers` | 1 | Official MCP reference servers | `reference-and-pin` |
 | `NVIDIA/NeMo-Agent-Toolkit` | 2 | Multi-agent framework | `evaluate-before-adoption` |
 
+**Canonical count: 4 Tier-1 + 1 Tier-2 = 5 upstream repositories.**
+
+## Getting the reviewed upstream source
+
+The repository now has a reproducible, non-vendoring fetch path:
+
+```bash
+bash scripts/upstreams/validate-registry.sh
+bash scripts/upstreams/fetch-pinned.sh
+```
+
+This fetches the **exact pinned revisions** into:
+
+```text
+.ananas/upstreams/
+```
+
+That directory is Git-ignored. It exists so contributors and agents can inspect, benchmark, adapt, and reuse upstream code/skills without copying five external repositories into Ananas history.
+
+A successful fetch means **source is available locally at the reviewed pin**. It does **not** mean every upstream capability is automatically trusted, installed, executed, or promoted into Ananas Core.
+
 ## Tier 1 rule
 
 Tier 1 does **not** mean clone, fork, or copy the entire repository into Ananas.
 
 Allowed integration patterns:
 
+- fetch the reviewed source into the local upstream cache;
 - install selected skills;
 - depend on released packages where appropriate;
 - adapt reference implementations behind Ananas-owned interfaces;
 - pin reviewed commit/version identifiers;
 - maintain provenance and license metadata;
-- update deliberately through reviewable pull requests.
+- update deliberately through reviewable pull requests;
+- contribute generally useful fixes upstream rather than carrying avoidable forks.
 
 Avoid:
 
 - subtree copies with no update path;
 - unreviewed scripts running with broad credentials;
 - duplicating upstream source only to make minor local changes;
-- binding Ananas core contracts to one vendor's internal API.
+- binding Ananas core contracts to one vendor's internal API;
+- executing fetched upstream code merely because it is present in `.ananas/upstreams/`.
 
 ## Tier 2 rule
 
@@ -51,6 +75,21 @@ Adoption requires evidence for at least:
 
 A Tier-2 component should be adopted only if it improves successful tasks per dollar or substantially reduces Ananas-owned orchestration code without creating unacceptable lock-in.
 
+## Reuse decision sequence
+
+Before writing a new Ananas subsystem, use this order:
+
+```text
+Need identified
+  → search existing Ananas capability
+  → check Tier-1 upstreams / MCP references
+  → evaluate a released package or selected skill
+  → wrap behind an Ananas-owned adapter
+  → build net-new code only for the remaining gap
+```
+
+This is the practical anti-reinvention rule.
+
 ## Supply-chain controls
 
 Before promoting or updating an upstream component:
@@ -58,10 +97,11 @@ Before promoting or updating an upstream component:
 1. Review its current license and transitive dependencies.
 2. Review the exact pinned diff from the previously approved version.
 3. Run relevant tests/benchmarks.
-4. Scan for credential, network, filesystem, subprocess, and code-execution behavior.
+4. Scan credential, network, filesystem, subprocess, and code-execution behavior.
 5. Restrict permissions to the minimum required by the selected skill/tool.
 6. Record the approved pin in `config/upstreams.yaml`.
 7. Prefer an adapter boundary so a component can be removed without rewriting product logic.
+8. Keep the fetched source cache outside Git history.
 
 ## Current pins — 2026-08-15
 
@@ -71,4 +111,4 @@ Before promoting or updating an upstream component:
 - `modelcontextprotocol/servers` → `76d64c822f5125032f89eb71dbdb94e42b434821`
 - `NVIDIA/NeMo-Agent-Toolkit` (`develop`) → `a35d30cdaf2327e93cb9b47e0ddb447e1d64f523`
 
-These are provenance pins, not automatic permission to import every component at those revisions.
+These are provenance/reproducibility pins, not blanket permission to import or execute every component at those revisions.
