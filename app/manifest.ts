@@ -4,11 +4,11 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Ananas — Autonomous Engineering Workspace",
     short_name: "Ananas",
-    description: "GitHub-anchored, cloud-native autonomous software engineering without local GPU requirements.",
+    description: "A calm, GitHub-anchored operating workspace for autonomous software engineering.",
     start_url: "/",
     display: "standalone",
-    background_color: "#030605",
-    theme_color: "#C8FF3D",
+    background_color: "#101117",
+    theme_color: "#7157FF",
     icons: [{ src: "/favicon.svg", sizes: "any", type: "image/svg+xml" }],
   };
 }

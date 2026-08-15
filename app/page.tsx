@@ -1,79 +1,36 @@
 import { AnanasMark } from "@/components/ananas-mark";
-import { ContextCanvas } from "@/components/context-canvas";
-import { SpatialNavigator } from "@/components/spatial-navigator";
-import { SpatialScene } from "@/components/spatial-scene";
-import Image from "next/image";
+import { chatGPTSignInPath, getChatGPTUser } from "./chatgpt-auth";
+
+export const dynamic = "force-dynamic";
 
 const repoUrl = "https://github.com/aashaukatc/-Ananas";
 const siteUrl = "https://ananas-agent.aashaukat.chatgpt.site";
 
-const capabilities = [
+const features = [
   {
     number: "01",
-    id: "context",
-    title: "Unified Context Canvas",
-    label: "MVP target",
-    body: "Conversation, code, documents, and rendered artifacts share one decision thread. A secure execution surface keeps the work visible and inspectable—not trapped behind a chat response.",
-    signal: "Artifacts + execution",
+    title: "One context, every artifact",
+    body: "Keep the conversation, repository, plan, patch, test result, and decision record in one inspectable workspace.",
+    label: "Unified canvas",
   },
   {
     number: "02",
-    id: "routing",
-    title: "Dual-Engine Prompting",
-    label: "MVP target",
-    body: "Ambiguous, open-ended work enters a context-heavy reasoning route. Strict functional work enters a structured execution route. LiteLLM keeps the provider boundary configurable.",
-    signal: "Reason → Execute",
+    title: "Route work by intent",
+    body: "Use a context-heavy reasoning route for ambiguity and a structured execution route for bounded engineering tasks.",
+    label: "Dual-engine flow",
   },
   {
     number: "03",
-    id: "memory",
-    title: "1M-Token Hybrid Memory",
-    label: "Capacity target",
-    body: "Designed for whole repositories, research archives, portfolios, and manuscripts while preserving early constraints, dissenting evidence, and source boundaries.",
-    signal: "Long-context target",
-  },
-  {
-    number: "04",
-    id: "media",
-    title: "Dynamic Media Generation",
-    label: "MVP target",
-    body: "SVG charts, system maps, interface wireframes, and flow diagrams become editable working artifacts inside the same context—not flattened decoration added after the reasoning.",
-    signal: "Vector-native output",
+    title: "Change models, not product logic",
+    body: "LiteLLM keeps NVIDIA Nemotron and OpenRouter behind a portable provider boundary with explicit fallback policy.",
+    label: "Provider portable",
   },
 ];
 
-const architecture = [
-  ["01", "Browser", "Any modern laptop", "Entry plane"],
-  ["02", "GitHub Codespaces", "VS Code + Continue", "Primary workspace"],
-  ["03", "Google Compute Engine", "code-server + Continue", "Persistent exception"],
-  ["04", "LiteLLM", "Retries + ordered failover", "Routing control"],
-  ["05", "NVIDIA Nemotron", "Benchmark-gated", "Primary inference"],
-  ["06", "OpenRouter", "Provider-portable", "Fallback route"],
-];
-
-const principles = [
-  ["Codespaces first", "Use included development capacity before consuming persistent cloud infrastructure."],
-  ["Compute decoupled", "The browser, Codespace, and GCP control plane do not need a local GPU."],
-  ["Provider portable", "Model endpoints stay behind configuration and LiteLLM rather than leaking into product logic."],
-  ["GitHub anchored", "Source, architecture, benchmark criteria, and operational decisions remain version controlled."],
-];
-
-const policies = [
-  ["01", "Transparent by default", "Ananas does not simulate consciousness, emotion, or physical experience. Material uncertainty is exposed as a hallucination risk."],
-  ["02", "Adaptive guardrails", "Harmful intent is removed; the safe, educational, or productive part of a request is clarified and completed when possible."],
-  ["03", "Zero-retention target", "Enterprise data handling is designed around encryption, explicit opt-in training consent, and auditable retention controls."],
-  ["04", "Localhost service boundary", "code-server and LiteLLM remain bound to localhost on GCP and are reached through SSH or IAP tunneling."],
-];
-
-const roadmap = [
-  ["00", "Repository foundation", "Complete"],
-  ["01", "Reliable AI coding workspace", "Active"],
-  ["02", "Portable Agent Skills + MCP", "Planned"],
-  ["03", "Executable benchmark platform", "Planned"],
-  ["04", "Autonomous engineering loop", "Planned"],
-  ["05", "GCP deployment layer", "Planned"],
-  ["06", "Observability + cost intelligence", "Planned"],
-  ["07", "Production security hardening", "Planned"],
+const workflow = [
+  ["01", "Bring the work", "Open a repository, describe the outcome, or attach the evidence that should govern the task."],
+  ["02", "Choose the operating mode", "Reason through uncertain work or execute a bounded plan with tools, checkpoints, and visible artifacts."],
+  ["03", "Keep the proof", "Review the plan, code, tests, cost signals, and final handoff without losing the original context."],
 ];
 
 const structuredData = {
@@ -84,7 +41,7 @@ const structuredData = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: "Ananas",
-      description: "Cloud-native autonomous software engineering workspace with provider-portable remote AI inference.",
+      description: "A cloud-native autonomous engineering workspace for reasoning, execution, and inspectable artifacts.",
     },
     {
       "@type": "SoftwareApplication",
@@ -94,179 +51,181 @@ const structuredData = {
       operatingSystem: "Browser, Linux",
       url: siteUrl,
       codeRepository: repoUrl,
-      description: "A GitHub-anchored, cloud-native autonomous engineering workspace using Codespaces, Continue, LiteLLM, NVIDIA Nemotron, OpenRouter, and Google Cloud.",
+      description: "A GitHub-anchored autonomous engineering workspace using Codespaces, Continue, LiteLLM, NVIDIA Nemotron, OpenRouter, and Google Cloud.",
       license: "https://www.apache.org/licenses/LICENSE-2.0",
-      author: { "@type": "Person", name: "Aftab Shaukat" },
-    },
-    {
-      "@type": "Person",
-      "@id": `${siteUrl}/#founder`,
-      name: "Aftab Shaukat",
-      url: `${siteUrl}/#founder`,
-      jobTitle: "Systems strategist and Ananas founder",
     },
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  const user = await getChatGPTUser();
+  const workspaceHref = user ? "/workspace" : chatGPTSignInPath("/workspace");
+
   return (
-    <>
+    <div className="marketing-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-      <SpatialScene />
-      <SpatialNavigator />
+      <a className="skip-link" href="#main-content">Skip to content</a>
 
-      <main className="spatial-site">
-        <a className="skip-link" href="#content">Skip to the Ananas story</a>
+      <header className="marketing-header">
+        <a className="brand" href="#top" aria-label="Ananas home">
+          <span className="brand-icon"><AnanasMark decorative /></span>
+          <span className="brand-word">ananas</span>
+        </a>
+        <nav className="marketing-nav" aria-label="Primary navigation">
+          <a href="#product">Product</a>
+          <a href="#workflow">How it works</a>
+          <a href="#architecture">Architecture</a>
+          <a href={repoUrl} target="_blank" rel="noreferrer">Open source <span>↗</span></a>
+        </nav>
+        <div className="header-actions">
+          <a className="login-link" href={workspaceHref}>{user ? "Workspace" : "Log in"}</a>
+          <a className="header-cta" href={workspaceHref}>{user ? "Open Ananas" : "Get started"}<span>↗</span></a>
+        </div>
+      </header>
 
-        <header className="site-header">
-          <a className="brand-lockup" href="#top" aria-label="Ananas home">
-            <span className="brand-mark"><AnanasMark decorative /></span>
-            <span><strong>ANANAS</strong><small>autonomous engineering</small></span>
-          </a>
-          <nav aria-label="Primary navigation">
-            <a href="#system">System</a>
-            <a href="#canvas">Canvas</a>
-            <a href="#benchmark">Evidence</a>
-            <a href="#founder">Founder</a>
-          </nav>
-          <a className="source-pill" href={repoUrl} target="_blank" rel="noreferrer"><span>GitHub source</span><i aria-hidden="true">↗</i></a>
-        </header>
-
-        <section className="scene-section hero-scene" id="top" data-scene="0" aria-labelledby="hero-title">
-          <div className="scene-copy hero-copy" id="content">
-            <div className="system-kicker"><span>ANANAS / HYBRID AI MVP</span><i /><span>PHASE 1 ACTIVE</span></div>
-            <h1 id="hero-title">Intelligence<br /><em>without hardware</em><br />borders.</h1>
-            <p className="hero-intro">A cloud-native autonomous engineering workspace that separates where developers work from where AI inference runs—then reconnects both through one provider-portable control plane.</p>
-            <div className="hero-actions">
-              <a className="action action-primary" href="#system"><span>Enter the system</span><i aria-hidden="true">↓</i></a>
-              <a className="action action-ghost" href={repoUrl} target="_blank" rel="noreferrer"><span>Read the repository</span><i aria-hidden="true">↗</i></a>
+      <main id="main-content">
+        <section className="new-hero" id="top" aria-labelledby="hero-title">
+          <div className="hero-grid" aria-hidden="true" />
+          <div className="hero-copy-new">
+            <div className="eyebrow"><span className="live-dot" />Cloud-native autonomous engineering</div>
+            <h1 id="hero-title">Your work deserves<br />more than a <em>chat tab.</em></h1>
+            <p>Ananas is a focused operating environment for complex software work—reason, execute, inspect, and hand off without losing the context that made the answer correct.</p>
+            <div className="hero-cta-row">
+              <a className="primary-cta" href={workspaceHref}>{user ? "Continue to workspace" : "Log in to Ananas"}<span>→</span></a>
+              <a className="text-cta" href="#product">Explore the product <span>↓</span></a>
+            </div>
+            <div className="hero-proof">
+              <span>Browser first</span><i />
+              <span>No local GPU</span><i />
+              <span>GitHub anchored</span><i />
+              <span>Apache 2.0</span>
             </div>
           </div>
 
-          <aside className="hero-telemetry glass-panel" aria-label="Ananas identity profile">
-            <div className="panel-topline"><span><i /> Spatial node 00</span><span>Context-first</span></div>
-            <dl>
-              <div><dt>Name</dt><dd>Ananas</dd></div>
-              <div><dt>Tagline</dt><dd>Sweet logic, sharp execution.</dd></div>
-              <div><dt>Workspace</dt><dd>Browser-first / GPU-free</dd></div>
-              <div><dt>Control plane</dt><dd>GitHub + LiteLLM</dd></div>
-            </dl>
-            <div className="telemetry-signal" aria-hidden="true"><span /><span /><span /><span /><span /><span /></div>
-          </aside>
-          <div className="scroll-cue" aria-hidden="true"><span>Scroll to route</span><i /></div>
+          <div className="product-stage" aria-label="Preview of the Ananas engineering workspace">
+            <div className="stage-glow" aria-hidden="true" />
+            <div className="workspace-preview">
+              <aside className="preview-rail">
+                <span className="preview-logo"><AnanasMark decorative /></span>
+                <i className="preview-new" />
+                <div className="preview-nav-lines"><i /><i /><i /></div>
+                <span className="preview-avatar">AS</span>
+              </aside>
+              <div className="preview-main">
+                <div className="preview-topbar"><span>Ananas / workspace</span><div><i /><i /><i /></div></div>
+                <div className="preview-thread">
+                  <span className="preview-kicker">REASON → EXECUTE</span>
+                  <h2>Build the smallest safe path<br />from intent to proof.</h2>
+                  <div className="preview-message"><span>AN</span><p>I mapped the dependency boundary, isolated the risky change, and prepared a verification plan.</p></div>
+                  <div className="preview-plan">
+                    <div><span>01</span><strong>Inspect</strong><i /></div>
+                    <div><span>02</span><strong>Modify</strong><i /></div>
+                    <div><span>03</span><strong>Verify</strong><i /></div>
+                  </div>
+                </div>
+                <div className="preview-composer"><span>Ask Ananas to build, debug, or explain…</span><i>↑</i></div>
+              </div>
+            </div>
+            <div className="floating-card card-route"><small>MODEL ROUTE</small><strong>Nemotron</strong><span>Fallback ready</span></div>
+            <div className="floating-card card-proof"><small>RUN STATUS</small><strong>03 / 03</strong><span>Checks passed</span></div>
+          </div>
         </section>
 
-        <section className="scene-section system-scene" id="system" data-scene="1" aria-labelledby="system-title">
-          <div className="section-heading scene-copy">
-            <div className="section-code"><span>01</span><i /> Target architecture</div>
-            <h2 id="system-title">One source of truth.<br /><em>Two workspaces.</em><br />Zero local GPUs.</h2>
-            <p>Codespaces is the low-cost default. Google Compute Engine is the persistent exception. Both route remote inference through an explicit provider boundary.</p>
+        <section className="logo-strip" aria-label="Ananas technology stack">
+          <span>Built around</span>
+          <strong>GitHub</strong><i />
+          <strong>Continue</strong><i />
+          <strong>LiteLLM</strong><i />
+          <strong>NVIDIA</strong><i />
+          <strong>OpenRouter</strong><i />
+          <strong>Google Cloud</strong>
+        </section>
+
+        <section className="product-section" id="product" aria-labelledby="product-title">
+          <div className="section-intro">
+            <span className="section-label">01 / PRODUCT</span>
+            <h2 id="product-title">A calm interface for<br /><em>serious work.</em></h2>
+            <p>The interface stays familiar enough to use immediately, then adds the planning, evidence, routing, and artifact controls that ordinary chat products leave outside the conversation.</p>
           </div>
-          <div className="architecture-orbit" aria-label="Ananas architecture layers">
-            {architecture.map(([number, title, description, role]) => (
-              <article className="orbit-node glass-panel" key={number}>
-                <span className="node-number">{number}</span><div><h3>{title}</h3><p>{description}</p></div><small>{role}</small>
+          <div className="feature-grid-new">
+            {features.map((feature) => (
+              <article className="feature-card-new" key={feature.number}>
+                <div className="feature-number">{feature.number}</div>
+                <div className={`feature-visual feature-visual-${feature.number}`} aria-hidden="true"><i /><i /><i /></div>
+                <span className="feature-label">{feature.label}</span>
+                <h3>{feature.title}</h3>
+                <p>{feature.body}</p>
               </article>
             ))}
           </div>
-          <div className="principle-grid">
-            {principles.map(([title, body]) => <article key={title}><i aria-hidden="true" /><h3>{title}</h3><p>{body}</p></article>)}
-          </div>
         </section>
 
-        <section className="scene-section canvas-scene" id="canvas" data-scene="2" aria-labelledby="canvas-title">
-          <div className="canvas-intro scene-copy">
-            <div className="section-code"><span>02</span><i /> Unified context canvas</div>
-            <h2 id="canvas-title">Think in context.<br /><em>Execute in place.</em></h2>
-            <p>Switch between the reasoning and execution routes. The interaction is a truthful product prototype: it demonstrates the intended workflow without pretending a live model session exists.</p>
+        <section className="workflow-section" id="workflow" aria-labelledby="workflow-title">
+          <div className="workflow-heading">
+            <span className="section-label">02 / OPERATING LOOP</span>
+            <h2 id="workflow-title">Less prompting.<br /><em>More operating.</em></h2>
           </div>
-          <ContextCanvas />
-          <p className="truth-note"><span>MVP interaction</span> The secure sandbox and hybrid routing behavior shown here are product targets, not a production inference claim.</p>
-        </section>
-
-        <section className="scene-section capability-scene" id="capabilities" data-scene="3" aria-labelledby="capabilities-title">
-          <div className="section-heading compact scene-copy">
-            <div className="section-code"><span>03</span><i /> Capability constellation</div>
-            <h2 id="capabilities-title">Four moves.<br /><em>One memory.</em></h2>
-            <p>The MVP stays narrow: concentrate investment where hybrid intelligence removes real workflow fragmentation.</p>
-          </div>
-          <div className="capability-constellation">
-            {capabilities.map((capability) => (
-              <article className="capability-node glass-panel" id={capability.id} key={capability.id}>
-                <div className="capability-head"><span>{capability.number}</span><small>{capability.label}</small></div>
-                <div className={`vector-glyph glyph-${capability.id}`} aria-hidden="true"><i /><i /><i /></div>
-                <h3>{capability.title}</h3><p>{capability.body}</p><strong>{capability.signal}<i aria-hidden="true">↗</i></strong>
+          <div className="workflow-list">
+            {workflow.map(([number, title, body]) => (
+              <article key={number}>
+                <span>{number}</span><h3>{title}</h3><p>{body}</p><i aria-hidden="true">↗</i>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="scene-section benchmark-scene" id="benchmark" data-scene="4" aria-labelledby="benchmark-title">
-          <div className="benchmark-number" aria-hidden="true"><strong>90</strong><span>%</span></div>
-          <div className="benchmark-copy scene-copy">
-            <div className="section-code"><span>04</span><i /> Model adoption gate</div>
-            <h2 id="benchmark-title">Correctness<br /><em>before cheap tokens.</em></h2>
-            <p>Nemotron remains primary only when it preserves at least 90% of the frontier-baseline correctness score while materially improving inference economics—or wins on successful tasks per dollar.</p>
-            <div className="equation glass-panel" aria-label="Ananas model adoption formula"><span>promote(model)</span><strong>=</strong><span>correctness ≥ 0.90 × baseline</span><strong>∧</strong><span>economics improve</span></div>
-            <ul className="benchmark-dimensions" aria-label="Benchmark dimensions"><li>Hidden-test correctness</li><li>Concurrency and data integrity</li><li>Autonomous completion</li><li>Latency and API cost</li><li>Successful tasks per dollar</li></ul>
+        <section className="architecture-section" id="architecture" aria-labelledby="architecture-title">
+          <div className="architecture-copy-new">
+            <span className="section-label light">03 / ARCHITECTURE</span>
+            <h2 id="architecture-title">The workspace and the intelligence are <em>decoupled.</em></h2>
+            <p>Codespaces is the default development surface. Google Compute Engine is the persistent exception. LiteLLM keeps both independent from the model provider.</p>
+            <a href={repoUrl} target="_blank" rel="noreferrer">Inspect the architecture <span>↗</span></a>
           </div>
-          <aside className="truth-ledger glass-panel">
-            <div className="panel-topline"><span>Evidence ledger</span><span>Repository-backed</span></div>
-            <div><span>Benchmark protocol</span><strong>Defined</strong></div>
-            <div><span>Executable fixture</span><strong className="status-planned">Planned</strong></div>
-            <div><span>Provider smoke tests</span><strong className="status-active">Active path</strong></div>
-            <div><span>Published comparison</span><strong className="status-planned">Pending evidence</strong></div>
-          </aside>
-        </section>
-
-        <section className="scene-section policy-scene" id="policy" data-scene="5" aria-labelledby="policy-title">
-          <div className="section-heading scene-copy">
-            <div className="section-code"><span>05</span><i /> Constitutional utility</div>
-            <h2 id="policy-title">Useful enough<br />to move work.<br /><em>Honest enough to trust.</em></h2>
-            <p>Safety is an operating boundary, not a personality performance. Productive intent is preserved while uncertainty, privacy, and service exposure remain explicit.</p>
-          </div>
-          <div className="policy-stack">
-            {policies.map(([number, title, body]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p><i aria-hidden="true">↗</i></article>)}
-          </div>
-          <p className="truth-note policy-caveat"><span>Verification boundary</span> Enterprise retention and encryption claims remain product targets until implementation and independent controls prove them.</p>
-        </section>
-
-        <section className="scene-section founder-scene" id="founder" data-scene="6" aria-labelledby="founder-title">
-          <figure className="founder-portrait">
-            <div className="portrait-halo" aria-hidden="true" />
-            <Image src="/aftab-shaukat-founder.webp" alt="Aftab Shaukat, founder and systems strategist behind Ananas" width={899} height={1350} sizes="(max-width: 820px) 86vw, 38vw" />
-            <figcaption><span>Founder node / 06</span><strong>Aftab Shaukat</strong></figcaption>
-          </figure>
-          <div className="founder-copy scene-copy">
-            <div className="section-code"><span>06</span><i /> Origin</div>
-            <h2 id="founder-title">Built by an<br /><em>operator who sees systems.</em></h2>
-            <p>Aftab Shaukat brings healthcare operations, revenue-cycle leadership, business analysis, solution architecture, and process optimization into one systems-first perspective. Ananas turns that operating instinct into an open, measurable engineering workspace.</p>
-            <blockquote>“Stabilize first. Measure second. Automate third. Scale only after evidence.”</blockquote>
-            <div className="founder-tags"><span>Operations</span><span>Architecture</span><span>Business analysis</span><span>Process design</span></div>
+          <div className="architecture-map-new" aria-label="Ananas architecture flow">
+            <div className="map-column"><small>WORK</small><strong>Browser</strong><span>Any modern laptop</span></div>
+            <i>→</i>
+            <div className="map-stack"><div><small>PRIMARY</small><strong>Codespaces</strong></div><div><small>PERSISTENT</small><strong>Google Cloud</strong></div></div>
+            <i>→</i>
+            <div className="map-column map-control"><small>CONTROL</small><strong>LiteLLM</strong><span>Policy + fallback</span></div>
+            <i>→</i>
+            <div className="map-stack"><div><small>PRIMARY</small><strong>Nemotron</strong></div><div><small>FALLBACK</small><strong>OpenRouter</strong></div></div>
           </div>
         </section>
 
-        <section className="scene-section roadmap-scene" id="roadmap" data-scene="7" aria-labelledby="roadmap-title">
-          <div className="roadmap-copy scene-copy">
-            <div className="section-code"><span>07</span><i /> Repository trajectory</div>
-            <h2 id="roadmap-title">The vision is cinematic.<br /><em>The roadmap is executable.</em></h2>
-            <p>Every phase is anchored to source, evidence, and an explicit operating boundary. The live repository remains the durable control plane.</p>
+        <section className="security-section" id="security" aria-labelledby="security-title">
+          <div>
+            <span className="section-label">04 / OPERATING BOUNDARIES</span>
+            <h2 id="security-title">Visible controls.<br /><em>No synthetic confidence.</em></h2>
           </div>
-          <ol className="roadmap-list">
-            {roadmap.map(([number, title, status]) => <li key={number}><span>{number}</span><strong>{title}</strong><small className={status === "Active" ? "active" : status === "Complete" ? "complete" : "planned"}>{status}</small></li>)}
-          </ol>
-          <div className="final-callout glass-panel">
-            <AnanasMark decorative /><div><span>ANANAS / OPEN SOURCE</span><h3>Sweet logic.<br />Sharp execution.</h3></div>
-            <a href={repoUrl} target="_blank" rel="noreferrer"><span>Open the repository</span><i aria-hidden="true">↗</i></a>
+          <div className="security-points">
+            <article><span>01</span><div><h3>Secrets stay out of Git</h3><p>Provider keys belong in protected environment variables and workspace secrets.</p></div></article>
+            <article><span>02</span><div><h3>Services remain private</h3><p>Remote IDE and model gateway services stay localhost-bound behind SSH or IAP tunnels.</p></div></article>
+            <article><span>03</span><div><h3>Models earn promotion</h3><p>Nemotron becomes primary only after reproducible correctness and cost evidence.</p></div></article>
           </div>
         </section>
 
-        <footer className="site-footer">
-          <a className="brand-lockup" href="#top" aria-label="Back to Ananas home"><span className="brand-mark"><AnanasMark decorative /></span><span><strong>ANANAS</strong><small>context-first intelligence</small></span></a>
-          <p>GitHub-anchored. Provider-portable. Compute-decoupled.</p>
-          <div><a href={repoUrl} target="_blank" rel="noreferrer">GitHub</a><a href="#top">Back to top ↑</a></div>
-        </footer>
+        <section className="final-cta-section">
+          <div className="cta-orb" aria-hidden="true"><AnanasMark decorative /></div>
+          <span className="section-label light">READY WHEN YOU ARE</span>
+          <h2>Move from conversation<br />to <em>controlled execution.</em></h2>
+          <p>Open the workspace, choose an operating mode, and keep the plan, work, and proof in one place.</p>
+          <a className="primary-cta light-cta" href={workspaceHref}>{user ? "Open your workspace" : "Log in and start"}<span>→</span></a>
+        </section>
       </main>
-    </>
+
+      <footer className="site-footer-new">
+        <div className="footer-top">
+          <div className="footer-brand-block">
+            <a className="brand brand-footer" href="#top"><span className="brand-icon"><AnanasMark decorative /></span><span className="brand-word">ananas</span></a>
+            <p>Cloud-native autonomous engineering without hardware borders.</p>
+          </div>
+          <div className="footer-column"><strong>Product</strong><a href="#product">Workspace</a><a href="#workflow">Operating loop</a><a href="#architecture">Architecture</a><a href={workspaceHref}>Log in</a></div>
+          <div className="footer-column"><strong>Resources</strong><a href={repoUrl} target="_blank" rel="noreferrer">GitHub</a><a href={`${repoUrl}/blob/main/docs/ROADMAP.md`} target="_blank" rel="noreferrer">Roadmap</a><a href={`${repoUrl}/blob/main/docs/ARCHITECTURE.md`} target="_blank" rel="noreferrer">Documentation</a></div>
+          <div className="footer-column"><strong>Governance</strong><a href={`${repoUrl}/blob/main/SECURITY.md`} target="_blank" rel="noreferrer">Security</a><a href={`${repoUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Contributing</a><a href={`${repoUrl}/blob/main/LICENSE`} target="_blank" rel="noreferrer">Apache 2.0</a></div>
+        </div>
+        <div className="footer-bottom"><span>© 2026 Ananas. Open source, evidence first.</span><span>Designed for browsers. Built around GitHub.</span></div>
+        <div className="footer-wordmark" aria-hidden="true">ANANAS</div>
+      </footer>
+    </div>
   );
 }

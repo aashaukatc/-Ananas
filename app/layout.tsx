@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ananas-agent.aashaukat.chatgpt.site"),
-  title: "ANANAS — Autonomous Engineering Without Hardware Borders",
-  description: "Ananas is a GitHub-anchored, cloud-native autonomous software engineering workspace using Codespaces, Continue, LiteLLM, NVIDIA Nemotron, OpenRouter, and Google Cloud—without requiring a local GPU.",
+  title: {
+    default: "Ananas — Autonomous Engineering Workspace",
+    template: "%s · Ananas",
+  },
+  description: "A calm, GitHub-anchored workspace for autonomous software engineering: reason, execute, inspect artifacts, and preserve evidence without requiring a local GPU.",
   keywords: [
     "autonomous software engineering",
     "cloud-native AI workspace",
@@ -32,8 +35,8 @@ export const metadata: Metadata = {
   category: "Developer Tools",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "ANANAS — Sweet logic. Sharp execution.",
-    description: "Cloud-native autonomous software engineering with browser-first workspaces, remote AI inference, benchmark-gated models, and provider-portable routing.",
+    title: "Ananas — More than a chat tab",
+    description: "A cloud-native operating workspace for complex software work, inspectable artifacts, benchmark-gated models, and provider-portable routing.",
     type: "website",
     url: "/",
     siteName: "Ananas",
@@ -41,8 +44,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "ANANAS — Autonomous Engineering Without Hardware Borders",
-    description: "GitHub-anchored, compute-decoupled, provider-portable autonomous engineering.",
+    title: "Ananas — Autonomous Engineering Workspace",
+    description: "Reason, execute, inspect, and preserve evidence in one GitHub-anchored workspace.",
   },
   robots: {
     index: true,
