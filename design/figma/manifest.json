@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "sourceOfTruth": "GitHub repository requirements/architecture plus the active Figma prototype",
   "activeFile": {
     "name": "🍍 Ananas — MVP Product & DIRT Vertical",
@@ -7,12 +7,18 @@
     "url": "https://www.figma.com/design/mgVWhNifpTEdqdv9E487PQ",
     "role": "active-product-prototype",
     "pages": [
-      {"pageId":"0:1","name":"00 — Product Architecture","artifacts":[{"nodeId":"1:2","name":"Ananas Core → Vertical Products","width":1440,"height":1024}]},
-      {"pageId":"1:21","name":"01 — Ananas Chat MVP","artifacts":[{"nodeId":"3:2","name":"Ananas / Chat MVP / Desktop","width":1440,"height":1024}]},
-      {"pageId":"1:37","name":"02 — DIRT Reviewer Queue","artifacts":[{"nodeId":"3:84","name":"DIRT / Human Reviewer Queue / Desktop","width":1440,"height":1024}]},
-      {"pageId":"1:56","name":"03 — No-PHI Data Contract","artifacts":[{"nodeId":"3:176","name":"DIRT / No-PHI Audit Data Contract","width":1600,"height":1100}]},
-      {"pageId":"3:250","name":"04 — Delivery Lifecycle & Scope","artifacts":[{"nodeId":"3:251","name":"Ananas / Delivery Lifecycle / Scope Gates","width":1600,"height":1100}]}
-    ]
+      {"pageId":"0:1","name":"00 — Product Architecture","artifacts":[{"nodeId":"6:2","name":"Ananas Core → Vertical Products","width":1440,"height":1024}]},
+      {"pageId":"1:21","name":"01 — Ananas Chat MVP","artifacts":[{"nodeId":"6:34","name":"Ananas / Chat MVP / Desktop","width":1440,"height":1024}]},
+      {"pageId":"1:37","name":"02 — DIRT Reviewer Queue","artifacts":[{"nodeId":"6:118","name":"DIRT / Human Reviewer Queue / Desktop","width":1440,"height":1024}]},
+      {"pageId":"1:56","name":"03 — No-PHI Data Contract","artifacts":[{"nodeId":"6:212","name":"DIRT / Privacy-Gated Audit Data Contract","width":1700,"height":1160}]},
+      {"pageId":"3:250","name":"04 — Delivery Lifecycle & Scope","artifacts":[{"nodeId":"6:295","name":"Ananas / Delivery Lifecycle / Scope Gates","width":1600,"height":1100}]}
+    ],
+    "prototypeStatus": {
+      "visualFramesBuilt": true,
+      "allCanonicalPagesNonEmpty": true,
+      "interactionWalkthroughValidated": false,
+      "mvpBackendComplete": false
+    }
   },
   "legacyFiles": [
     {
