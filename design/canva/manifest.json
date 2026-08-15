@@ -2,12 +2,15 @@
   "folder": {
     "id": "FAHSUiWlSAc",
     "name": "🍍 Ananas",
-    "url": "https://www.canva.com/folder/FAHSUiWlSAc"
+    "url": "https://www.canva.com/folder/FAHSUiWlSAc",
+    "role": "collateral-only",
+    "sourceOfTruth": false
   },
   "designs": [
     {
       "id": "DAHSUjRT0Aw",
       "role": "logo-concept",
+      "status": "reference",
       "title": "Minimalist Crystalline Pineapple Bot Logo",
       "editUrl": "https://www.canva.com/d/8aLPK8FVLzl1vtE",
       "viewUrl": "https://www.canva.com/d/PINzliVxu5K6CVE"
@@ -15,7 +18,9 @@
     {
       "id": "DAHSUvq_HF0",
       "role": "social-preview",
-      "title": "Twitter / X Post - 🍍 Ananas: The Future of Software Engineering Workspaces",
+      "status": "legacy-copy-do-not-reuse",
+      "title": "Legacy — The Future of Software Engineering Workspaces",
+      "note": "This collateral predates the conversational work-engine product definition. Update the copy before republishing.",
       "editUrl": "https://www.canva.com/d/jqZd556y5SOlAjJ",
       "viewUrl": "https://www.canva.com/d/uOjWpLf0jATQVHy"
     }
