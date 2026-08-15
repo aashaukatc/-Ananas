@@ -1,3 +1,6 @@
+import { AnanasGlyph } from "../components/ananas-glyph";
+import { AnanasLogo3D } from "../components/ananas-logo-3d";
+
 const metrics = [
   ["Workspace", "Codespaces", "Healthy"],
   ["Primary model", "NVIDIA Nemotron", "Auth pending"],
@@ -14,24 +17,25 @@ const upstreams = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <header className="border-b border-[var(--ananas-border)] bg-[#0B1511]/90 backdrop-blur">
+    <main className="relative min-h-screen overflow-hidden">
+      <div className="ananas-grid pointer-events-none absolute inset-x-0 top-0 h-[780px] opacity-70" />
+      <header className="relative z-10 border-b border-[var(--ananas-border)] bg-[#050A08]/78 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4 lg:px-10">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl border border-[#C8FF3D]/40 bg-[#C8FF3D]/10 text-xl">🍍</div>
+            <div className="grid h-11 w-11 place-items-center rounded-xl border border-[#C8FF3D]/25 bg-[#C8FF3D]/[.035] shadow-[inset_0_0_24px_rgba(200,255,61,.04)]"><AnanasGlyph className="h-9 w-9" /></div>
             <div>
-              <div className="text-lg font-bold tracking-tight">Ananas</div>
+              <div className="text-lg font-bold tracking-[-0.02em]">Ananas</div>
               <div className="text-xs text-[var(--ananas-muted)]">autonomous engineering workspace</div>
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm text-[var(--ananas-muted)]">
             <span className="hidden md:inline">main</span>
-            <span className="rounded-full border border-[#48D17A]/30 bg-[#48D17A]/10 px-3 py-1 text-[#48D17A]">● Codespace online</span>
+            <span className="rounded-full border border-[#48D17A]/25 bg-[#48D17A]/[.06] px-3 py-1 text-[#48D17A]">● Codespace online</span>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[230px_1fr] lg:px-10">
+      <div className="relative z-10 mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[230px_1fr] lg:px-10">
         <aside className="hidden lg:block">
           <nav className="sticky top-6 space-y-1 text-sm">
             {['Overview','Tasks','Agents','Models','Skills','Benchmarks','Deployments','Settings'].map((item, i) => (
@@ -41,17 +45,25 @@ export default function Home() {
         </aside>
 
         <section className="min-w-0 space-y-8">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <h1 className="text-3xl font-bold tracking-[-0.03em] md:text-4xl">Build from anywhere. Route intelligence everywhere.</h1>
-              <p className="mt-3 max-w-3xl text-[var(--ananas-muted)]">GitHub-anchored development with remote inference, provider failover, reproducible benchmarks and portable agent skills.</p>
+          <div className="grid min-h-[420px] items-center gap-6 overflow-hidden rounded-[28px] border border-[var(--ananas-border)] bg-[#08100C]/72 px-6 py-8 shadow-[0_28px_90px_rgba(0,0,0,.24)] md:px-10 xl:grid-cols-[1.05fr_.95fr]">
+            <div className="relative z-10 max-w-3xl">
+              <h1 className="text-4xl font-bold tracking-[-0.045em] md:text-5xl xl:text-6xl">Build from anywhere.<br/><span className="text-[#C8FF3D]">Route intelligence everywhere.</span></h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--ananas-muted)] md:text-lg">GitHub-anchored development with remote inference, provider failover, reproducible benchmarks and portable agent skills.</p>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <button className="rounded-xl bg-[#C8FF3D] px-5 py-3 text-sm font-bold text-[#08100C] shadow-[0_0_42px_rgba(200,255,61,.12)]">New autonomous task</button>
+                <span className="text-xs uppercase tracking-[0.14em] text-[var(--ananas-muted)]">Codespaces → LiteLLM → Nemotron</span>
+              </div>
             </div>
-            <button className="rounded-xl bg-[#C8FF3D] px-5 py-3 text-sm font-bold text-[#08100C] shadow-[0_0_40px_rgba(200,255,61,.12)]">New autonomous task</button>
+            <div className="relative min-h-[320px] md:min-h-[390px]">
+              <div className="pointer-events-none absolute inset-10 rounded-full bg-[#C8FF3D]/[.025] blur-3xl" />
+              <AnanasLogo3D className="absolute inset-0" />
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-center text-[10px] uppercase tracking-[0.26em] text-[var(--ananas-muted)]">living infrastructure mark</div>
+            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {metrics.map(([label,value,status]) => (
-              <div key={label} className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] p-5">
+              <div key={label} className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-5 backdrop-blur">
                 <div className="text-xs uppercase tracking-[0.14em] text-[var(--ananas-muted)]">{label}</div>
                 <div className="mt-3 text-lg font-semibold">{value}</div>
                 <div className="mt-2 text-xs text-[#48D17A]">{status}</div>
@@ -60,7 +72,7 @@ export default function Home() {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
-            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] p-6">
+            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
               <div className="mb-6 flex items-center justify-between"><h2 className="font-semibold">Task stream</h2><span className="text-xs text-[var(--ananas-muted)]">live workspace</span></div>
               <div className="space-y-3">
                 {[
@@ -76,7 +88,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] p-6">
+            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
               <h2 className="font-semibold">Routing policy</h2>
               <div className="mt-5 space-y-4 text-sm">
                 <div><div className="text-[var(--ananas-muted)]">Primary</div><div className="mt-1 font-medium">NVIDIA Nemotron</div></div>
@@ -88,7 +100,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] p-6">
+          <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
             <div className="mb-5"><h2 className="font-semibold">Upstream capability registry</h2><p className="mt-1 text-sm text-[var(--ananas-muted)]">Consume upstream. Pin versions. Contribute improvements back.</p></div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[650px] text-left text-sm">
