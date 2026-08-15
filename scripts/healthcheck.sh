@@ -12,6 +12,14 @@ check_cmd() {
   fi
 }
 
+has_continue_secret() {
+  local name="$1"
+  if [[ -n "${!name:-}" ]]; then
+    return 0
+  fi
+  [[ -f "$HOME/.continue/.env" ]] && grep -q "^${name}=" "$HOME/.continue/.env"
+}
+
 printf '🍍 Ananas workspace health check\n\n'
 check_cmd git
 check_cmd gh
@@ -20,9 +28,12 @@ check_cmd node
 check_cmd npm
 check_cmd curl
 
-printf '\nProvider credentials:\n'
-[[ -n "${NVIDIA_API_KEY:-}" ]] && echo '✓ NVIDIA_API_KEY available' || echo '○ NVIDIA_API_KEY not set'
-[[ -n "${OPENROUTER_API_KEY:-}" ]] && echo '✓ OPENROUTER_API_KEY available' || echo '○ OPENROUTER_API_KEY not set'
+printf '\nProvider credentials for Continue:\n'
+has_continue_secret NVIDIA_API_KEY && echo '✓ NVIDIA_API_KEY available' || echo '○ NVIDIA_API_KEY not configured'
+has_continue_secret OPENROUTER_API_KEY && echo '✓ OPENROUTER_API_KEY available' || echo '○ OPENROUTER_API_KEY not configured'
+
+printf '\nContinue configuration:\n'
+[[ -f "$HOME/.continue/config.yaml" ]] && echo '✓ ~/.continue/config.yaml present' || echo '○ ~/.continue/config.yaml not present yet'
 
 printf '\nRepository:\n'
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -33,8 +44,8 @@ else
 fi
 
 if (( fail != 0 )); then
-  echo '\nHealth check failed.' >&2
+  printf '\nHealth check failed.\n' >&2
   exit 1
 fi
 
-echo '\nCore workspace is healthy.'
+printf '\nCore workspace is healthy.\n'
