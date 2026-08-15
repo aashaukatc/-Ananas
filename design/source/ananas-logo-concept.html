@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ananas 3D Cloud Mark</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:#050a08; color:#f5f7ed; font-family:Inter,system-ui,sans-serif; }
+    .lockup { text-align:center; }
+    #logo { width:min(78vw,520px); aspect-ratio:1; }
+    h1 { margin:-28px 0 0; font-size:clamp(2.5rem,7vw,4.8rem); letter-spacing:-.055em; }
+    p { margin:.6rem 0 0; color:#95a39b; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; }
+    @media (prefers-reduced-motion: reduce) { #logo { opacity:.96; } }
+  </style>
+  <script type="importmap">
+  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main class="lockup">
+    <div id="logo" aria-label="Animated Ananas pineapple infrastructure mark"></div>
+    <h1>Ananas</h1>
+    <p>cloud-native autonomous engineering</p>
+  </main>
+  <script type="module">
+    import * as THREE from 'three';
+    const container=document.querySelector('#logo');
+    const scene=new THREE.Scene();
+    const camera=new THREE.PerspectiveCamera(42,1,.1,100); camera.position.z=7.6;
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true}); renderer.setClearColor(0x000000,0); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); container.appendChild(renderer.domElement);
+    const root=new THREE.Group(); scene.add(root);
+    const bodyGeom=new THREE.SphereGeometry(1,28,22); bodyGeom.scale(.98,1.35,.98);
+    root.add(new THREE.Mesh(bodyGeom,new THREE.MeshBasicMaterial({color:0xffc857,wireframe:true,transparent:true,opacity:.48,blending:THREE.AdditiveBlending})));
+    const crownMat=new THREE.MeshBasicMaterial({color:0x48d17a,wireframe:true,transparent:true,opacity:.82,blending:THREE.AdditiveBlending});
+    for(let i=0;i<12;i++){const outer=i>=6,g=new THREE.ConeGeometry(outer ? .15 : .12,outer ? .72 : .58,4),s=new THREE.Mesh(g,crownMat),a=((i%6)/6)*Math.PI*2,r=outer ? .34 : .18;s.position.set(Math.cos(a)*r,1.34+(outer?0:.3),Math.sin(a)*r);s.rotation.z=-Math.cos(a)*(outer ? .48 : .2);s.rotation.x=Math.sin(a)*(outer ? .48 : .2);root.add(s)}
+    const visorMat=new THREE.MeshBasicMaterial({color:0xc8ff3d,wireframe:true,transparent:true,opacity:.94});
+    const left=new THREE.Mesh(new THREE.BoxGeometry(.78,.32,.08),visorMat),right=left.clone();left.position.set(-.45,.18,.93);right.position.set(.45,.18,.93);root.add(left,right);
+    const specs=[[0xc8ff3d,.48,.34,.22,1.9,0],[0x48d17a,.64,.43,.26,2.25,Math.PI/2.5],[0xffc857,.78,.3,.18,2.6,Math.PI]];
+    const waves=specs.map((s,w)=>{const n=96,p=new Float32Array(n*3),g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));const line=new THREE.Line(g,new THREE.LineBasicMaterial({color:s[0],transparent:true,opacity:.36,blending:THREE.AdditiveBlending}));root.add(line);return{line,p,n,s,w}});
+    const resize=()=>{const w=container.clientWidth,h=container.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};resize();new ResizeObserver(resize).observe(container);
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,clock=new THREE.Clock();
+    function render(){const t=reduce ? .7 : clock.getElapsedTime();waves.forEach(({line,p,n,s,w})=>{for(let i=0;i<n;i++){const x=i/(n-1)*6.6-3.3,e=.58+.42*Math.cos((x/3.3)*Math.PI*.5),o=i*3;p[o]=x;p[o+1]=Math.sin(x*s[4]+t*s[1]+s[5])*s[2]*e;p[o+2]=Math.cos(x*s[4]*.55+t*s[1]+w)*s[3]}line.geometry.attributes.position.needsUpdate=true});root.rotation.y=reduce ? .14 : Math.sin(t*.28)*.34;root.position.y=reduce?0:Math.sin(t*1.15)*.08;renderer.render(scene,camera);if(!reduce)requestAnimationFrame(render)}
+    render();
+  </script>
+</body>
+</html>
