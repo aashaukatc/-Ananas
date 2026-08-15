@@ -1,0 +1,26 @@
+name: Ananas
+version: 1.0.0
+schema: v1
+
+# Provider credentials are intentionally NOT stored in this repository.
+# Add them as Codespaces secrets/environment variables and make them
+# available to Continue according to your local Continue secret setup.
+
+models:
+  - name: Nemotron — NVIDIA
+    provider: nvidia
+    model: nvidia/nemotron-3-ultra-550b-a55b
+    apiKey: ${{ secrets.NVIDIA_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
+
+  - name: Nemotron — OpenRouter Backup
+    provider: openrouter
+    model: nvidia/nemotron-3-ultra-550b-a55b:free
+    apiKey: ${{ secrets.OPENROUTER_API_KEY }}
+    roles:
+      - chat
+      - edit
+      - apply
