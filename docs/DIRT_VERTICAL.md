@@ -14,13 +14,33 @@ DIRT (Data Intelligence for Revenue Transformation) is the first hyper-specializ
 
 DIRT should sit above existing PM/EMR/clearinghouse workflows and convert fragmented revenue-cycle data into prioritized signals, evidence-backed actions, reviewer work, and leadership visibility.
 
+## Privacy terminology: No-PHI is an acceptance outcome, not a field-list claim
+
+DIRT's default external-model intelligence path is designed as a **No-PHI candidate profile**. The implementation must not claim that a payload is legally de-identified merely because obvious identifiers were removed or identifiers were hashed.
+
+Under the HIPAA Privacy Rule, de-identification can be established through Safe Harbor or Expert Determination. For a Safe Harbor-oriented profile, all date elements more specific than year that are directly related to an individual must be removed, and the covered entity must not have actual knowledge that remaining information could identify the individual.
+
+Official HHS guidance: https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
+
+Therefore the default DIRT No-PHI candidate path uses:
+
+- no patient names, DOB, MRN, beneficiary/member IDs, account numbers, addresses, contact details, or identifiable clinical free text;
+- no exact service/admission/discharge/test dates in the external-model payload;
+- year-only service timing where needed;
+- bucketed operational age/timeliness measures rather than exact patient-event dates;
+- random/opaque surrogate instance IDs rather than hashes derived directly from patient/claim identifiers;
+- a protected preprocessing/control zone for any mapping required to reconnect a surrogate to source records;
+- an explicit privacy/security acceptance review before the profile is labeled production de-identified/No-PHI.
+
+A future **Expert Determination** profile may use a different set of fields only after the required expert analysis and documentation exist. It must be a separately versioned privacy profile, not a silent relaxation of the default profile.
+
 ## MVP scope
 
-### 1. No-PHI audit engine
+### 1. Privacy-gated audit engine
 
-The No-PHI intelligence path receives only fields required for financial, administrative, coding-pattern, workflow, and denial analysis. Direct patient identifiers and identifiable free-text clinical content are prohibited from that path.
+The external-model intelligence path receives only approved fields required for financial, administrative, coding-pattern, workflow, and denial analysis.
 
-An ingress validator/reject-quarantine boundary must run **before** the No-PHI model/intelligence path. Do not rely on the model to sanitize prohibited data after ingestion.
+An ingress validator/reject-quarantine boundary runs **before** the external-model path. The model is never used as the de-identification mechanism.
 
 ### 2. EDI/workflow signals
 
@@ -31,35 +51,64 @@ DIRT may classify:
 - enrollment friction;
 - authorization signals;
 - coding/modifier patterns;
-- timely-filing risk;
+- timely-filing risk bands;
 - denial recurrence;
-- AR aging and inactivity;
+- AR aging bands/inactivity;
 - reimbursement variance.
 
 ### 3. Human reviewer queue
 
-Signals are prioritized by revenue at risk, recovery probability, age, confidence, and operational ownership. DIRT recommends; a reviewer validates or overrides high-impact actions.
+Signals are prioritized by revenue at risk, recovery probability, aging band, confidence, and persisted operational ownership. DIRT recommends; a reviewer validates or overrides high-impact actions.
 
 ### 4. Explainability and audit trail
 
-Every signal should carry source lineage, evidence references, policy/version context, confidence, model route, recommended action, and reviewer disposition/outcome.
+Every signal must carry source/evidence lineage, immutable model/policy/ruleset versions, confidence, recommended action, and a reconstructable assignment/reviewer history.
+
+## Data zones
+
+```text
+PHI-capable source / preprocessing zone
+  - exact source identifiers/dates where operationally required
+  - access controlled
+  - de-identification/privacy transformation
+  - surrogate mapping kept here only
+                │
+                ▼
+Privacy validation gate
+  - schema allowlist
+  - identifier/date checks
+  - reject/quarantine
+  - approved privacy_profile_version
+                │
+                ▼
+Default No-PHI candidate intelligence payload
+  - random surrogate instances
+  - year/bucketed timing
+  - approved financial/coding/admin fields
+                │
+                ▼
+Ananas intelligence → signal → human reviewer
+```
+
+Exact service dates may remain inside the protected source/preprocessing zone for deterministic RCM calculations, but they do not cross the default No-PHI candidate external-model boundary. Derived outputs such as AR/timely-filing bands must themselves be reviewed for re-identification risk before production use.
 
 ## Exact minimum data contract
 
-### `audit_claim`
+### `audit_claim_snapshot`
+
+One immutable normalized claim state for one ingestion snapshot.
 
 | Field | Type | Purpose |
 |---|---|---|
 | tenant_id | uuid | tenant partition |
 | source_system | string | source provenance |
-| source_file_id | uuid | file lineage |
-| claim_key_hash | string | de-identified stable claim key |
-| encounter_key_hash | string? | optional de-identified encounter grouping |
+| source_batch_id | uuid | immutable ingestion batch lineage |
+| claim_instance_id | uuid | random instance ID for this normalized snapshot; not derived from a patient/claim identifier |
+| claim_group_token | string? | optional opaque longitudinal-linkage code only when generated/managed under an approved de-identification/re-identification design |
 | payer_id | string | normalized payer |
 | provider_key | string | non-patient provider reference |
 | facility_key | string | facility reference |
-| service_from | date | service date |
-| service_to | date | service date range |
+| service_year | int | year only in default Safe Harbor-oriented candidate profile |
 | place_of_service | string | POS |
 | claim_status | string | normalized status |
 | billed_amount | decimal | charge exposure |
@@ -68,16 +117,22 @@ Every signal should carry source lineage, evidence references, policy/version co
 | adjustment_amount | decimal | adjustments |
 | patient_resp_amount | decimal | patient responsibility amount only |
 | open_balance | decimal | unresolved balance |
-| days_in_ar | int | aging |
-| last_activity_at | datetime | inactivity/timeliness |
-| created_at | datetime | audit timestamp |
+| ar_age_band | enum | e.g. `0_30`, `31_60`, `61_90`, `91_120`, `120_plus` |
+| inactivity_band | enum | bucketed inactivity measure |
+| timely_filing_risk_band | enum | approved bucketed risk measure |
+| privacy_profile_version | string | transformation/allowlist version |
+
+**Not present in the default external-model payload:** exact service date, admission/discharge date, last patient-related activity date, patient DOB, or source patient/claim identifier.
 
 ### `audit_claim_line`
 
+Every line is bound to a specific immutable claim snapshot so repeated ingestions cannot cross-join old and new claim states.
+
 | Field | Type |
 |---|---|
-| claim_key_hash | string |
-| line_key_hash | string |
+| claim_instance_id | uuid |
+| line_instance_id | uuid |
+| source_batch_id | uuid |
 | cpt_hcpcs | string |
 | modifiers | string[] |
 | diagnosis_family | string[] |
@@ -94,15 +149,16 @@ Every signal should carry source lineage, evidence references, policy/version co
 | rejection_family | string? |
 | auth_signal | enum |
 | documentation_signal | enum |
-| source_row_locator | string |
+| source_row_token | uuid | random/opaque lineage token resolvable only through the protected source/control zone |
+| privacy_profile_version | string |
 
 ### `audit_signal`
 
 | Field | Type |
 |---|---|
 | signal_id | uuid |
-| claim_key_hash | string |
-| line_key_hash | string? |
+| claim_instance_id | uuid |
+| line_instance_id | uuid? |
 | signal_type | enum |
 | severity | enum |
 | confidence | decimal |
@@ -110,10 +166,34 @@ Every signal should carry source lineage, evidence references, policy/version co
 | recovery_probability | decimal |
 | root_cause_family | string |
 | recommended_action_id | string |
-| evidence_refs | string[] |
-| model_route | string |
-| policy_version | string |
-| created_at | datetime |
+| evidence_refs | uuid[] |
+| model_provider | string |
+| model_id | string |
+| model_revision | string? |
+| route_policy_version | string |
+| prompt_policy_version | string |
+| ruleset_version | string |
+| privacy_profile_version | string |
+| created_at | datetime | Ananas/DIRT system audit timestamp; not a patient event date |
+
+Route aliases alone are insufficient for reproducibility. Immutable model/policy/ruleset versions are stored on the signal at creation time.
+
+### `assignment_event`
+
+Queue ownership is event-sourced so assignment/reassignment survives refresh and is auditable.
+
+| Field | Type |
+|---|---|
+| assignment_event_id | uuid |
+| signal_id | uuid |
+| event_type | enum | `assigned`, `reassigned`, `unassigned` |
+| assigned_team_id | string? |
+| assigned_actor_id | string? |
+| changed_by_actor_id | string |
+| reason_code | string? |
+| event_at | datetime |
+
+Current queue ownership is derived from the latest valid assignment event rather than existing only as UI state.
 
 ### `review_event`
 
@@ -121,7 +201,8 @@ Every signal should carry source lineage, evidence references, policy/version co
 |---|---|
 | review_event_id | uuid |
 | signal_id | uuid |
-| reviewer_role | string |
+| reviewer_actor_id | string | stable reviewer/service identity |
+| reviewer_role | string | role at the time of review |
 | disposition | enum |
 | action_taken | string |
 | override_reason | string? |
@@ -129,35 +210,42 @@ Every signal should carry source lineage, evidence references, policy/version co
 | reviewed_at | datetime |
 | policy_version | string |
 
-## Explicitly prohibited from No-PHI intelligence payloads
+Reviewer role alone is not sufficient for accountability; the stable reviewer/service actor is recorded as well.
+
+## Explicitly prohibited from the default No-PHI candidate external-model payload
 
 - patient name;
 - date of birth;
-- address;
+- exact service, admission, discharge, test, or other patient-event dates more specific than year;
+- address/geography below an approved de-identification threshold/profile;
 - phone/email;
 - SSN;
-- member/subscriber identifier;
+- member/subscriber/beneficiary identifier;
 - medical-record number;
-- raw patient account identifier unless transformed under an approved de-identification design;
+- patient account number;
+- raw patient or claim identifiers;
+- hashes deterministically derived from patient/claim identifiers unless a separately approved de-identification design explicitly permits them;
 - identifiable free-text clinical notes;
-- images/documents containing identifiable clinical information.
+- images/documents containing identifiable clinical information;
+- any remaining combination for which the organization has actual knowledge that the individual could be identified.
 
-The implementation must undergo formal privacy/security review before claiming that a dataset or workflow is de-identified under applicable law or contract.
+The implementation must undergo formal privacy/security review before claiming that a production dataset or workflow is de-identified under applicable law or contract.
 
 ## Reviewer queue UI
 
 Primary queue columns:
 
-`priority | revenue_at_risk | payer | issue_family | confidence | recovery_probability | days_in_ar | owner | disposition`
+`priority | revenue_at_risk | payer | issue_family | confidence | recovery_probability | ar_age_band | current_owner | disposition`
 
 Reviewer detail must show:
 
-- evidence and source lineage;
+- evidence and protected-source lineage reference;
 - detected pattern/root cause;
 - recommended SOP/action;
 - confidence and recovery rationale;
-- policy/model versions;
-- reviewer decision and override reason;
+- immutable model/policy/ruleset/privacy-profile versions;
+- current assignment + assignment history;
+- reviewer actor/role, decision, and override reason;
 - final outcome/recovered amount where known.
 
 ## Existing RCM asset reuse
@@ -170,11 +258,11 @@ Required boundary:
 
 ```text
 Existing source/intake/warehouse capability
-  → DIRT normalization/export adapter
-  → No-PHI ingress validator
-  → audit_claim / audit_claim_line
+  → protected DIRT normalization/privacy adapter
+  → privacy validation gate
+  → audit_claim_snapshot / audit_claim_line
   → audit_signal
-  → Human Reviewer Queue
+  → assignment_event / Human Reviewer Queue
   → review_event / measured outcome
 ```
 
@@ -188,9 +276,10 @@ DIRT MVP does not:
 - alter payer portals automatically;
 - replace the PM/EMR;
 - act as a clearinghouse;
-- store clinical charts in the No-PHI intelligence path;
+- store clinical charts in the default external-model intelligence path;
 - make autonomous irreversible high-impact billing decisions without configured approval controls;
-- claim production-grade de-identification merely because direct identifiers were removed.
+- claim production-grade de-identification merely because direct identifiers were removed;
+- treat a cryptographic hash of a patient/claim identifier as automatically Safe Harbor-compatible.
 
 ## Prototype / Figma
 
