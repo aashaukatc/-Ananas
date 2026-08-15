@@ -40,6 +40,7 @@ Ananas uses explicit gates so infrastructure, experiments, prototypes, MVP code,
 | **MVP** | Not yet achieved; implementation backlog active |
 | **Pilot / Beta** | Not started |
 
+Canonical status: [`docs/STATUS.md`](docs/STATUS.md)  
 Canonical boundaries: [`docs/SCOPE.md`](docs/SCOPE.md)  
 Stage gates: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)  
 Canonical phase sequence: [`docs/ROADMAP.md`](docs/ROADMAP.md)
@@ -218,6 +219,7 @@ See [`docs/SETUP.md`](docs/SETUP.md) and [`SECURITY.md`](SECURITY.md).
 
 ## Key documents
 
+- Current status: [`docs/STATUS.md`](docs/STATUS.md)
 - Scope: [`docs/SCOPE.md`](docs/SCOPE.md)
 - Delivery lifecycle: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)
 - MVP: [`docs/MVP.md`](docs/MVP.md)
