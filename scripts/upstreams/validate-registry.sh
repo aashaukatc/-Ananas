@@ -38,9 +38,19 @@ while IFS= read -r line; do
 done < <(grep '^    pin: ' "${REGISTRY}")
 
 pin_count="$(grep -c '^    pin: ' "${REGISTRY}" || true)"
+provenance_count="$(grep -c '^    provenance: ' "${REGISTRY}" || true)"
+license_count="$(grep -c '^    license_spdx: ' "${REGISTRY}" || true)"
+license_review_count="$(grep -c '^    license_review: ' "${REGISTRY}" || true)"
+security_review_count="$(grep -c '^    security_review: ' "${REGISTRY}" || true)"
+
 [[ "${pin_count}" == "5" ]] || fail "expected 5 pins, found ${pin_count}"
+[[ "${provenance_count}" == "5" ]] || fail "expected provenance metadata for all 5 upstreams, found ${provenance_count}"
+[[ "${license_count}" == "5" ]] || fail "expected license_spdx metadata for all 5 upstreams, found ${license_count}"
+[[ "${license_review_count}" == "5" ]] || fail "expected license_review metadata for all 5 upstreams, found ${license_review_count}"
+[[ "${security_review_count}" == "5" ]] || fail "expected security_review metadata for all 5 upstreams, found ${security_review_count}"
 
 grep -Fq 'repository: NVIDIA/NeMo-Agent-Toolkit' "${REGISTRY}" || fail "missing NeMo Agent Toolkit"
 grep -Fq 'adoption_gate: benchmark-required' "${REGISTRY}" || fail "NeMo Agent Toolkit must retain benchmark-required adoption gate"
+grep -A14 -F 'repository: modelcontextprotocol/servers' "${REGISTRY}" | grep -Fq 'license_review: repository-metadata-no-spdx-review-required-before-code-adoption' || fail "MCP reference-server license review must remain explicit"
 
-echo "upstream-registry: valid (4 Tier-1 + 1 Tier-2, 5 pinned revisions, vendoring disabled)"
+echo "upstream-registry: valid (4 Tier-1 + 1 Tier-2, 5 pins, provenance/license/security metadata, vendoring disabled)"
