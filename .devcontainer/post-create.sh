@@ -10,8 +10,7 @@ if [[ ! -f "$HOME/.continue/config.yaml" && -f "config/continue/config.yaml.exam
   echo "Created ~/.continue/config.yaml from the repository template."
 fi
 
-if [[ -x scripts/bootstrap.sh ]]; then
-  ./scripts/bootstrap.sh
-fi
+bash scripts/bootstrap.sh
+bash scripts/sync-continue-secrets.sh
 
-printf '\nReady. Run ./scripts/healthcheck.sh to verify the workspace.\n'
+printf '\nReady. Run: bash scripts/healthcheck.sh\n'
