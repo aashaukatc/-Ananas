@@ -20,11 +20,22 @@ jobs:
           set -euo pipefail
           find scripts .devcontainer -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
 
+      - name: Validate upstream registry
+        run: bash scripts/upstreams/validate-registry.sh
+
       - name: Check for accidentally committed private keys
         run: |
           set -euo pipefail
           if git grep -nE -- '-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----' ':!*.example'; then
             echo 'Private-key material detected.' >&2
+            exit 1
+          fi
+
+      - name: Ensure local upstream cache is not tracked
+        run: |
+          set -euo pipefail
+          if git ls-files '.ananas/upstreams/**' | grep -q .; then
+            echo 'Pinned upstream source cache must never be committed.' >&2
             exit 1
           fi
 
@@ -46,5 +57,5 @@ jobs:
       - name: Install web dependencies
         run: npm install
 
-      - name: Build Ananas command center
+      - name: Build Ananas product shell
         run: npm run build
