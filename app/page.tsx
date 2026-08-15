@@ -1,115 +1,183 @@
 import { AnanasGlyph } from "../components/ananas-glyph";
-import { AnanasLogo3D } from "../components/ananas-logo-3d";
 
-const metrics = [
-  ["Workspace", "Codespaces", "Healthy"],
-  ["Primary model", "NVIDIA Nemotron", "Auth pending"],
-  ["Fallback", "OpenRouter", "Not configured"],
-  ["Gateway", "LiteLLM", "Ready"],
+const projects = [
+  { name: "Ananas Core", active: true },
+  { name: "DIRT RCM", active: false },
+  { name: "Continuara", active: false },
+  { name: "Research Lab", active: false },
 ];
 
-const upstreams = [
-  ["NVIDIA/skills", "Agent Skills", "Tier 1"],
-  ["vercel-labs/skills", "Skills CLI", "Tier 1"],
-  ["microsoft/skills", "Skills + MCP", "Tier 1"],
-  ["NVIDIA/NeMo-Agent-Toolkit", "Multi-agent", "Tier 2"],
+const inScope = [
+  "Persistent projects and files",
+  "Artifacts beside conversation",
+  "Governed tools and skills",
+  "Provider-portable routing",
+  "API + execution telemetry",
+];
+
+const deferred = [
+  "Foundation-model training",
+  "Native mobile apps",
+  "Social login",
+  "Billing / subscriptions",
+  "Irreversible healthcare actions",
 ];
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div className="ananas-grid pointer-events-none absolute inset-x-0 top-0 h-[780px] opacity-70" />
-      <header className="relative z-10 border-b border-[var(--ananas-border)] bg-[#050A08]/78 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4 lg:px-10">
+    <main className="min-h-screen bg-[var(--ananas-night)] text-[var(--ananas-cream)]">
+      <div className="grid min-h-screen lg:grid-cols-[248px_minmax(0,1fr)_390px]">
+        <aside className="hidden border-r border-[var(--ananas-border)] bg-[var(--ananas-surface)]/70 p-5 lg:flex lg:flex-col">
           <div className="flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl border border-[#C8FF3D]/25 bg-[#C8FF3D]/[.035] shadow-[inset_0_0_24px_rgba(200,255,61,.04)]"><AnanasGlyph className="h-9 w-9" /></div>
+            <div className="grid h-10 w-10 place-items-center rounded-xl border border-[#C8FF3D]/20 bg-[#C8FF3D]/[.04]">
+              <AnanasGlyph className="h-8 w-8" />
+            </div>
             <div>
-              <div className="text-lg font-bold tracking-[-0.02em]">Ananas</div>
-              <div className="text-xs text-[var(--ananas-muted)]">autonomous engineering workspace</div>
+              <div className="font-semibold tracking-[-0.02em]">Ananas</div>
+              <div className="text-xs text-[var(--ananas-muted)]">conversational work engine</div>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-sm text-[var(--ananas-muted)]">
-            <span className="hidden md:inline">main</span>
-            <span className="rounded-full border border-[#48D17A]/25 bg-[#48D17A]/[.06] px-3 py-1 text-[#48D17A]">● Codespace online</span>
-          </div>
-        </div>
-      </header>
 
-      <div className="relative z-10 mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[230px_1fr] lg:px-10">
-        <aside className="hidden lg:block">
-          <nav className="sticky top-6 space-y-1 text-sm">
-            {['Overview','Tasks','Agents','Models','Skills','Benchmarks','Deployments','Settings'].map((item, i) => (
-              <div key={item} className={`rounded-lg px-3 py-2.5 ${i===0?'bg-[#C8FF3D] font-semibold text-[#08100C]':'text-[var(--ananas-muted)] hover:bg-[#122019] hover:text-white'}`}>{item}</div>
+          <button className="mt-6 rounded-xl bg-[var(--ananas-lime)] px-4 py-3 text-left text-sm font-bold text-[#07100B]">
+            + New project
+          </button>
+
+          <div className="mt-7 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--ananas-muted)]">
+            Projects
+          </div>
+          <nav className="mt-3 space-y-1.5">
+            {projects.map((project) => (
+              <div
+                key={project.name}
+                className={`rounded-xl px-3 py-2.5 text-sm ${
+                  project.active
+                    ? "border border-[#C8FF3D]/25 bg-[var(--ananas-surface-2)] font-semibold"
+                    : "text-[var(--ananas-muted)] hover:bg-[var(--ananas-surface-2)] hover:text-white"
+                }`}
+              >
+                {project.name}
+              </div>
             ))}
           </nav>
+
+          <div className="mt-8 border-t border-[var(--ananas-border)] pt-5">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--ananas-muted)]">
+              Project sources
+            </div>
+            <div className="mt-3 space-y-2 text-sm text-[var(--ananas-muted)]">
+              <div>Files</div>
+              <div>Skills & tools</div>
+              <div>Connectors</div>
+              <div>Activity</div>
+            </div>
+          </div>
+
+          <div className="mt-auto rounded-xl border border-[var(--ananas-border)] bg-[#0B1511] p-3 text-xs leading-5 text-[var(--ananas-muted)]">
+            GitHub is the durable source of truth. This screen is the Phase-1 product shell, not the old engineering Command Center.
+          </div>
         </aside>
 
-        <section className="min-w-0 space-y-8">
-          <div className="grid min-h-[420px] items-center gap-6 overflow-hidden rounded-[28px] border border-[var(--ananas-border)] bg-[#08100C]/72 px-6 py-8 shadow-[0_28px_90px_rgba(0,0,0,.24)] md:px-10 xl:grid-cols-[1.05fr_.95fr]">
-            <div className="relative z-10 max-w-3xl">
-              <h1 className="text-4xl font-bold tracking-[-0.045em] md:text-5xl xl:text-6xl">Build from anywhere.<br/><span className="text-[#C8FF3D]">Route intelligence everywhere.</span></h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--ananas-muted)] md:text-lg">GitHub-anchored development with remote inference, provider failover, reproducible benchmarks and portable agent skills.</p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <button className="rounded-xl bg-[#C8FF3D] px-5 py-3 text-sm font-bold text-[#08100C] shadow-[0_0_42px_rgba(200,255,61,.12)]">New autonomous task</button>
-                <span className="text-xs uppercase tracking-[0.14em] text-[var(--ananas-muted)]">Codespaces → LiteLLM → Nemotron</span>
-              </div>
+        <section className="flex min-h-screen min-w-0 flex-col">
+          <header className="flex min-h-16 items-center justify-between border-b border-[var(--ananas-border)] px-4 sm:px-6">
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold">Ananas Core / MVP architecture</div>
+              <div className="mt-0.5 text-xs text-[var(--ananas-muted)]">Project conversation</div>
             </div>
-            <div className="relative min-h-[320px] md:min-h-[390px]">
-              <div className="pointer-events-none absolute inset-10 rounded-full bg-[#C8FF3D]/[.025] blur-3xl" />
-              <AnanasLogo3D className="absolute inset-0" />
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-center text-[10px] uppercase tracking-[0.26em] text-[var(--ananas-muted)]">living infrastructure mark</div>
+            <div className="ml-4 flex items-center gap-2">
+              <span className="hidden rounded-full border border-[#48D17A]/25 bg-[#48D17A]/[.06] px-3 py-1.5 text-xs text-[#48D17A] sm:inline">
+                NVIDIA primary · OpenRouter fallback
+              </span>
+              <span className="rounded-full border border-[#FFC857]/25 bg-[#FFC857]/[.06] px-3 py-1.5 text-xs text-[#FFC857]">
+                Prototype shell
+              </span>
             </div>
-          </div>
+          </header>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {metrics.map(([label,value,status]) => (
-              <div key={label} className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-5 backdrop-blur">
-                <div className="text-xs uppercase tracking-[0.14em] text-[var(--ananas-muted)]">{label}</div>
-                <div className="mt-3 text-lg font-semibold">{value}</div>
-                <div className="mt-2 text-xs text-[#48D17A]">{status}</div>
-              </div>
-            ))}
-          </div>
+          <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-8 sm:px-6">
+            <div className="ml-auto max-w-[88%] rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface-2)] px-4 py-3 text-sm leading-6">
+              Define the Phase-1 MVP, make the repository consistent end-to-end, and reuse mature upstream capability instead of rebuilding it.
+            </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]">
-            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
-              <div className="mb-6 flex items-center justify-between"><h2 className="font-semibold">Task stream</h2><span className="text-xs text-[var(--ananas-muted)]">live workspace</span></div>
-              <div className="space-y-3">
-                {[
-                  ['Provider validation','Verify NVIDIA Build API authentication','blocked'],
-                  ['Skills bridge','Map portable Agent Skills into Continue rules + MCP','ready'],
-                  ['Benchmark runner','Nemotron vs frontier brownfield evaluation','queued'],
-                ].map(([title,desc,state]) => (
-                  <div key={title} className="rounded-xl border border-[var(--ananas-border)] bg-[#0E1A14] p-4">
-                    <div className="flex items-center justify-between gap-4"><div className="font-medium">{title}</div><span className={`text-xs ${state==='blocked'?'text-[#FFC857]':'text-[#48D17A]'}`}>{state}</span></div>
-                    <p className="mt-1 text-sm text-[var(--ananas-muted)]">{desc}</p>
-                  </div>
-                ))}
+            <div className="mt-6 max-w-[94%] rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] px-5 py-5">
+              <div className="text-sm font-semibold">Phase-1 contract</div>
+              <p className="mt-3 text-sm leading-6 text-[var(--ananas-cream)]">
+                Ananas is a standalone conversational work engine. DIRT is the first specialized vertical pack—not a fork of the core and not the definition of Ananas itself.
+              </p>
+              <div className="my-4 h-px bg-[var(--ananas-border)]" />
+              <ul className="space-y-2 text-sm leading-6">
+                <li>• Persistent projects, files, and grounded context</li>
+                <li>• Editable artifacts beside the conversation</li>
+                <li>• Governed tools, skills, and sandboxed execution</li>
+                <li>• LiteLLM routing with provider portability</li>
+                <li>• API access, source lineage, and compute telemetry</li>
+              </ul>
+              <div className="mt-4 inline-flex rounded-full border border-[#48D17A]/25 bg-[#48D17A]/[.06] px-3 py-1 text-xs font-medium text-[#48D17A]">
+                Scope grounded in 5 canonical upstream repositories
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
-              <h2 className="font-semibold">Routing policy</h2>
-              <div className="mt-5 space-y-4 text-sm">
-                <div><div className="text-[var(--ananas-muted)]">Primary</div><div className="mt-1 font-medium">NVIDIA Nemotron</div></div>
-                <div className="h-px bg-[var(--ananas-border)]" />
-                <div><div className="text-[var(--ananas-muted)]">Fallback</div><div className="mt-1 font-medium">OpenRouter</div></div>
-                <div className="h-px bg-[var(--ananas-border)]" />
-                <div><div className="text-[var(--ananas-muted)]">Control plane</div><div className="mt-1 font-medium">LiteLLM localhost gateway</div></div>
-              </div>
+            <div className="mt-4 max-w-[94%] rounded-xl border border-[var(--ananas-border)] bg-[#09120D] px-4 py-3 text-xs leading-5 text-[var(--ananas-muted)]">
+              <span className="font-semibold text-[#48D17A]">Execution trace</span>
+              <span className="mx-2">·</span>
+              project context loaded
+              <span className="mx-2">·</span>
+              upstream registry validated
+              <span className="mx-2">·</span>
+              artifact ready
             </div>
-          </div>
 
-          <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)]/80 p-6">
-            <div className="mb-5"><h2 className="font-semibold">Upstream capability registry</h2><p className="mt-1 text-sm text-[var(--ananas-muted)]">Consume upstream. Pin versions. Contribute improvements back.</p></div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[650px] text-left text-sm">
-                <thead className="text-xs uppercase tracking-[0.12em] text-[var(--ananas-muted)]"><tr><th className="pb-3">Repository</th><th>Role</th><th>Policy</th></tr></thead>
-                <tbody>{upstreams.map(([repo,role,tier]) => <tr key={repo} className="border-t border-[var(--ananas-border)]"><td className="py-4 font-medium">{repo}</td><td className="text-[var(--ananas-muted)]">{role}</td><td className="text-[#C8FF3D]">{tier}</td></tr>)}</tbody>
-              </table>
+            <div className="mt-auto pt-8">
+              <div className="rounded-2xl border border-[var(--ananas-border)] bg-[var(--ananas-surface)] p-4 shadow-[0_22px_70px_rgba(0,0,0,.22)]">
+                <div className="min-h-16 text-sm text-[var(--ananas-muted)]">
+                  Ask Ananas about this project, attach a file, invoke a tool, or create an artifact…
+                </div>
+                <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[var(--ananas-border)] pt-3">
+                  <button className="rounded-lg border border-[var(--ananas-border)] px-3 py-2 text-xs text-[var(--ananas-muted)]">+ File</button>
+                  <button className="rounded-lg border border-[var(--ananas-border)] px-3 py-2 text-xs text-[var(--ananas-muted)]">⌘ Tool</button>
+                  <button className="rounded-lg border border-[var(--ananas-border)] px-3 py-2 text-xs text-[var(--ananas-muted)]">◇ Artifact</button>
+                  <button className="ml-auto rounded-lg bg-[var(--ananas-lime)] px-4 py-2 text-xs font-bold text-[#07100B]">Send ↑</button>
+                </div>
+              </div>
+              <p className="mt-3 text-center text-[11px] text-[var(--ananas-muted)]">
+                UI scaffold only. Persistence, retrieval, tools, execution, and provider calls are tracked as MVP implementation work.
+              </p>
             </div>
           </div>
         </section>
+
+        <aside className="hidden border-l border-[var(--ananas-border)] bg-[var(--ananas-surface)]/70 p-5 xl:block">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--ananas-lime)]">
+            Artifact / Canvas
+          </div>
+          <h2 className="mt-2 text-xl font-bold tracking-[-0.025em]">MVP Scope Contract</h2>
+          <p className="mt-1 text-xs text-[var(--ananas-muted)]">Persistent document · prototype state</p>
+
+          <div className="my-5 h-px bg-[var(--ananas-border)]" />
+          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ananas-muted)]">In scope</div>
+          <div className="mt-3 space-y-2.5 text-sm">
+            {inScope.map((item) => (
+              <div key={item}>✓ {item}</div>
+            ))}
+          </div>
+
+          <div className="my-5 h-px bg-[var(--ananas-border)]" />
+          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ananas-muted)]">Explicitly deferred</div>
+          <div className="mt-3 space-y-2.5 text-sm text-[var(--ananas-muted)]">
+            {deferred.map((item) => (
+              <div key={item}>— {item}</div>
+            ))}
+          </div>
+
+          <div className="my-5 h-px bg-[var(--ananas-border)]" />
+          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ananas-muted)]">Delivery gates</div>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            <span className="rounded-full border border-[#48D17A]/25 bg-[#48D17A]/[.06] px-3 py-1.5 text-[#48D17A]">Scope · defined</span>
+            <span className="rounded-full border border-[#FFC857]/25 bg-[#FFC857]/[.06] px-3 py-1.5 text-[#FFC857]">PoC · active</span>
+            <span className="rounded-full border border-[#C8FF3D]/25 bg-[#C8FF3D]/[.06] px-3 py-1.5 text-[#C8FF3D]">Prototype · visual built</span>
+            <span className="rounded-full border border-[var(--ananas-border)] px-3 py-1.5 text-[var(--ananas-muted)]">MVP · pending</span>
+            <span className="rounded-full border border-[var(--ananas-border)] px-3 py-1.5 text-[var(--ananas-muted)]">Pilot/Beta · future</span>
+          </div>
+        </aside>
       </div>
     </main>
   );
