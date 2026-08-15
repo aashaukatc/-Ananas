@@ -1,8 +1,14 @@
 # DIRT RCM — Ananas Vertical Blueprint
 
+## Status
+
+**Vertical scope/data contract defined. Editable prototype built. DIRT MVP is not yet implemented or released.**
+
+DIRT follows the same delivery discipline as Ananas Core: Scope → PoC → Prototype → MVP → Pilot/Beta. See [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md).
+
 ## Role
 
-DIRT (Data Intelligence for Revenue Transformation) is the first hyper-specialized product powered by Ananas. It is an RCM intelligence and audit layer, not the Ananas core itself.
+DIRT (Data Intelligence for Revenue Transformation) is the first hyper-specialized product powered by Ananas. It is an RCM intelligence and audit layer, not Ananas Core itself.
 
 **Product thesis:** clarity before automation.
 
@@ -12,7 +18,9 @@ DIRT should sit above existing PM/EMR/clearinghouse workflows and convert fragme
 
 ### 1. No-PHI audit engine
 
-The intelligence layer receives only fields required for financial, administrative, coding-pattern, workflow, and denial analysis. Direct patient identifiers and free-text clinical notes are excluded.
+The No-PHI intelligence path receives only fields required for financial, administrative, coding-pattern, workflow, and denial analysis. Direct patient identifiers and identifiable free-text clinical content are prohibited from that path.
+
+An ingress validator/reject-quarantine boundary must run **before** the No-PHI model/intelligence path. Do not rely on the model to sanitize prohibited data after ingestion.
 
 ### 2. EDI/workflow signals
 
@@ -34,7 +42,7 @@ Signals are prioritized by revenue at risk, recovery probability, age, confidenc
 
 ### 4. Explainability and audit trail
 
-Every signal should carry source lineage, evidence references, policy/version context, confidence, model route, recommended action, and reviewer disposition.
+Every signal should carry source lineage, evidence references, policy/version context, confidence, model route, recommended action, and reviewer disposition/outcome.
 
 ## Exact minimum data contract
 
@@ -104,6 +112,7 @@ Every signal should carry source lineage, evidence references, policy/version co
 | recommended_action_id | string |
 | evidence_refs | string[] |
 | model_route | string |
+| policy_version | string |
 | created_at | datetime |
 
 ### `review_event`
@@ -129,11 +138,11 @@ Every signal should carry source lineage, evidence references, policy/version co
 - SSN;
 - member/subscriber identifier;
 - medical-record number;
-- raw patient account identifier unless irreversibly transformed under the approved de-identification design;
-- free-text clinical notes;
+- raw patient account identifier unless transformed under an approved de-identification design;
+- identifiable free-text clinical notes;
 - images/documents containing identifiable clinical information.
 
-The implementation must still undergo formal privacy/security review before claiming that a dataset or workflow is de-identified under applicable law or contract.
+The implementation must undergo formal privacy/security review before claiming that a dataset or workflow is de-identified under applicable law or contract.
 
 ## Reviewer queue UI
 
@@ -151,7 +160,27 @@ Reviewer detail must show:
 - reviewer decision and override reason;
 - final outcome/recovered amount where known.
 
-## MVP boundaries
+## Existing RCM asset reuse
+
+DIRT should reuse existing RCM ingestion, lineage, QA, normalization, and warehouse work where it is fit for purpose instead of rebuilding those layers inside Ananas.
+
+Current integration assessment: `aashaukatc/rcm-data-platform` Issue `#11`.
+
+Required boundary:
+
+```text
+Existing source/intake/warehouse capability
+  → DIRT normalization/export adapter
+  → No-PHI ingress validator
+  → audit_claim / audit_claim_line
+  → audit_signal
+  → Human Reviewer Queue
+  → review_event / measured outcome
+```
+
+Ananas Core must not inherit local MongoDB/SQL/RCM assumptions merely because an existing data platform uses them.
+
+## DIRT MVP boundaries
 
 DIRT MVP does not:
 
@@ -159,9 +188,18 @@ DIRT MVP does not:
 - alter payer portals automatically;
 - replace the PM/EMR;
 - act as a clearinghouse;
-- store clinical charts;
-- make autonomous irreversible high-impact billing decisions without configured approval controls.
+- store clinical charts in the No-PHI intelligence path;
+- make autonomous irreversible high-impact billing decisions without configured approval controls;
+- claim production-grade de-identification merely because direct identifiers were removed.
 
-## Figma
+## Prototype / Figma
 
-Canonical product wireframes and schema: https://www.figma.com/design/mgVWhNifpTEdqdv9E487PQ
+Canonical product/prototype file: https://www.figma.com/design/mgVWhNifpTEdqdv9E487PQ
+
+Relevant pages:
+
+- `02 — DIRT Reviewer Queue`
+- `03 — No-PHI Data Contract`
+- `04 — Delivery Lifecycle & Scope`
+
+These are prototype/design artifacts, not evidence that DIRT MVP backend behavior is complete.
