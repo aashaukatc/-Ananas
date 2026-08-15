@@ -38,13 +38,28 @@ At minimum:
 - provider/model requests must not silently include unrelated project context;
 - logs/telemetry must avoid capturing secrets or sensitive file contents by default.
 
-### DIRT No-PHI intelligence path
+### DIRT privacy-gated intelligence path
 
-DIRT's initial No-PHI path must reject/quarantine prohibited identifiers **before** model/intelligence processing. Removing obvious identifiers after a model call is not an acceptable boundary.
+DIRT's default external-model path is a **No-PHI candidate profile**, not a legal conclusion created by a field allowlist.
 
-See `docs/DIRT_VERTICAL.md` for the prohibited payload categories and exact audit objects.
+The path must reject/quarantine prohibited identifiers **before** model/intelligence processing. The model is never used as the de-identification mechanism.
+
+For the default Safe Harbor-oriented candidate profile:
+
+- exact patient-event dates more specific than year do not cross the external-model boundary;
+- exact service dates may remain only in the protected source/preprocessing zone when operational calculations require them;
+- random surrogate instance identifiers are preferred over hashes derived directly from patient/claim identifiers;
+- any longitudinal linkage token requires an approved de-identification/re-identification design;
+- bucketed timing/aging outputs and high-dimensional combinations still require re-identification-risk review;
+- the organization must not have actual knowledge that remaining information can identify an individual.
+
+A future Expert Determination profile must be separately versioned and supported by the required expert analysis/documentation. It must not silently relax the default profile.
+
+See `docs/DIRT_VERTICAL.md` for the privacy zones, prohibited payload categories, and exact audit objects.
 
 Do not claim legal/contractual de-identification compliance without a formal privacy/security review of the implemented pipeline.
+
+Official HHS de-identification guidance: https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
 
 ### Prototype data
 
@@ -73,12 +88,12 @@ Fetched source is placed in `.ananas/upstreams/`, which is Git-ignored.
 
 Important: **fetched does not mean trusted to execute.** Before promoting an upstream skill/tool/package:
 
-1. review the exact pin and license;
+1. review the exact pin, repository/component license, and transitive dependencies;
 2. inspect credential/network/filesystem/subprocess/code-execution behavior;
 3. restrict permissions;
 4. run relevant tests/benchmarks;
 5. wrap it behind an Ananas-owned adapter where practical;
-6. record provenance/version/permission scope.
+6. record provenance/version/license/security-review/permission scope.
 
 `NVIDIA/NeMo-Agent-Toolkit` is Tier 2 and must not become a core dependency before its benchmark/adoption gate passes.
 
