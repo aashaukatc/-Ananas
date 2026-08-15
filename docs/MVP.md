@@ -18,11 +18,11 @@ See [`SCOPE.md`](SCOPE.md) and [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md).
 
 Ananas is a standalone, cloud-native conversational work engine. Its interaction model is intentionally familiar to users of modern assistants, but Ananas is designed around operational work, persistent projects, reusable skills, governed tools, structured artifacts, source lineage, cost-aware routing, and domain-specific vertical products.
 
-Ananas is **not** DIRT and is **not** limited to healthcare RCM. DIRT is the first vertical product powered by Ananas.
+Ananas is **not** DIRT and is **not** limited to healthcare RCM. DIRT is the first real vertical product powered by Ananas.
 
 ## Phase-1 MVP thesis
 
-Phase 1 proves that Ananas can operate as a useful home-grown general-purpose work assistant before vertical specialization.
+Phase 1 proves that Ananas can operate as a useful home-grown general-purpose work assistant before a real domain vertical is required for completion.
 
 The MVP must support:
 
@@ -40,7 +40,9 @@ The MVP must support:
 12. Usage, latency, token, retry/fallback, cost, and task-outcome telemetry.
 13. Provider portability and configuration-driven routing.
 14. Security boundaries that keep secrets out of Git/UI and isolate project/tenant context.
-15. A vertical-pack installation/integration path that does not require forking core runtime architecture.
+15. A **minimal synthetic vertical-pack fixture** proving that domain configuration can register/load without forking or modifying core conversation/routing/execution contracts.
+
+A real DIRT or Continuara implementation is **not** required to finish the Ananas Core Phase-1 MVP. DIRT begins its own implementation phase after the shared-core contract is proven.
 
 ## Phase-1 non-goals
 
@@ -57,7 +59,8 @@ The MVP does not need to:
 - accept PHI inside Ananas Core;
 - execute irreversible healthcare transactions without domain-specific approval controls;
 - vendor or fork large upstream frameworks without demonstrated need;
-- adopt NVIDIA NeMo Agent Toolkit as core merely because it is available.
+- adopt NVIDIA NeMo Agent Toolkit as core merely because it is available;
+- ship DIRT or Continuara merely to prove the generic vertical-pack interface.
 
 Large-context capability is a **routing + context-management capability**, not a hard-coded model-size promise. The system should use the reliable context supported by the selected provider/model while extending practical working context with retrieval, project memory, summarization, files, and artifact persistence.
 
@@ -100,8 +103,9 @@ Do **not** fork the core product for each vertical.
 ```text
 Ananas Core
    │
-   ├── DIRT RCM
-   ├── Continuara
+   ├── synthetic vertical fixture  ← Phase-1 contract test only
+   ├── DIRT RCM                    ← later real vertical
+   ├── Continuara                  ← later real vertical
    └── Future verticals
 ```
 
@@ -116,7 +120,8 @@ The MVP should not hide unresolved architecture risk behind UI mocks. At minimum
 - governed Tier-1 tool/skill invocation;
 - sandbox boundary behavior;
 - API parity;
-- pinned upstream retrieval/adaptation.
+- pinned upstream retrieval/adaptation;
+- minimal synthetic vertical-pack registration/loading.
 
 ## MVP acceptance gates
 
@@ -133,7 +138,7 @@ Phase-1 MVP is complete only when all of the following are true from a clean sup
 9. Primary and alternate/fallback provider behavior is tested.
 10. Basic latency/token/cost/retry/outcome telemetry can be inspected.
 11. The same core workflow can be invoked through an API without duplicating product logic.
-12. A vertical-pack fixture can be installed/loaded without modifying core conversation/routing/execution architecture.
+12. A **synthetic test vertical pack** can be registered/loaded without modifying core conversation/routing/execution implementation; no real healthcare vertical is required for this gate.
 13. CI/build/tests pass from a clean checkout.
 14. No critical security/privacy issue remains open for the MVP path.
 15. User-visible capabilities do not claim backend behavior that exists only in the prototype.
@@ -149,6 +154,7 @@ If commercialization becomes a target, billing is introduced as its own scoped c
 | Layer | Purpose |
 |---|---|
 | Ananas Core | Reusable conversation, context, artifacts, tools, routing, execution, API, telemetry |
+| Synthetic vertical fixture | Phase-1 interface/registration test; contains no real domain or healthcare logic |
 | Vertical Pack | Domain policy, skills, schemas, connectors, evaluations, workflow modules |
 | Product Surface | Specialized UX such as the DIRT Reviewer Queue |
 | Development/Deployment | Codespaces for development; GCP when persistence/deployment workloads justify it |
