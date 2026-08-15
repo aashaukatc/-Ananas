@@ -26,7 +26,7 @@ const deferred = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--ananas-night)] text-[var(--ananas-cream)]">
-      <div className="grid min-h-screen lg:grid-cols-[248px_minmax(0,1fr)_390px]">
+      <div className="grid min-h-screen lg:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[248px_minmax(0,1fr)_390px]">
         <aside className="hidden border-r border-[var(--ananas-border)] bg-[var(--ananas-surface)]/70 p-5 lg:flex lg:flex-col">
           <div className="flex items-center gap-3">
             <div className="grid h-10 w-10 place-items-center rounded-xl border border-[#C8FF3D]/20 bg-[#C8FF3D]/[.04]">
