@@ -1,6 +1,22 @@
 # 🍍 Ananas Roadmap
 
-This roadmap is the canonical phase-level plan for Ananas. The product sequence is now explicit: **foundation → general-purpose conversational MVP → reusable capability layer → DIRT RCM vertical → additional verticals**.
+This roadmap is the canonical phase-level sequence for Ananas. Product delivery stages are controlled separately by [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md): **Scope → PoC → Prototype → MVP → Pilot/Beta**.
+
+The architecture sequence is:
+
+**cloud foundation → conversational core → reusable capabilities/context/execution → measured economics → DIRT vertical → reuse existing RCM data assets → additional verticals → production hardening → ecosystem**.
+
+## Delivery-gate overlay
+
+| Gate | Current state | Roadmap relationship |
+|---|---|---|
+| Scope | Defined | Phase-1 boundary frozen in `SCOPE.md` |
+| Proof of Concept | Active / partial | Critical technical risks across Phases 1–4 |
+| Prototype | Visual prototype built; interaction validation pending | Active Figma product surfaces for Core + DIRT |
+| MVP | Not yet achieved | Core MVP exits Phase 1 only when `MVP.md` gates pass |
+| Pilot/Beta | Not started | Begins after MVP + required production/security hardening for the target audience |
+
+Roadmap phase completion does not automatically equal a delivery-stage transition. Evidence rules live in the lifecycle document.
 
 ## Phase 0 — Cloud-Native Engineering Foundation — Complete
 
@@ -16,36 +32,42 @@ This roadmap is the canonical phase-level plan for Ananas. The product sequence 
 - [x] Initial web application surface
 - [x] Model benchmark principles
 
-This phase remains important infrastructure, but it is no longer treated as the product itself.
+This phase remains important infrastructure, but it is **not the product itself**.
 
 ## Phase 1 — Ananas Conversational MVP — Active
 
 Goal: deliver a useful home-grown conversational work assistant before specializing it into any one domain.
 
-### Product contract — complete
+### Scope/product contract — complete
 
 - [x] Define Ananas as standalone core rather than an RCM/coding-only product
-- [x] Define Phase-1 MVP and non-goals
+- [x] Define Phase-1 inclusions/exclusions
+- [x] Define Scope → PoC → Prototype → MVP → Pilot/Beta gates
 - [x] Define core → vertical product contract
+- [x] Create Figma product architecture
 - [x] Create Figma Ananas chat/workspace wireframe
+- [x] Create Figma lifecycle/scope board
 - [x] Establish Figma ↔ GitHub design governance
+- [x] Replace legacy engineering-dashboard product framing with chat-first app shell
 
 ### Build
 
-- [ ] Make conversation the primary application surface
+- [ ] Implement real session/user identity for the supported release audience
+- [ ] Implement multi-turn conversation persistence
 - [ ] Add persistent projects/workspaces
-- [ ] Add file upload + file-grounded context
+- [ ] Add file upload/indexing + file-grounded context
+- [ ] Add source-lineage model
 - [ ] Add persistent artifact/canvas model
-- [ ] Support document/code/table/schema/chart artifact types
+- [ ] Support document/code/table/schema/chart/structured-data artifacts
+- [ ] Add artifact reopen/revision behavior
 - [ ] Add tool/skill invocation runtime
-- [ ] Add concise execution-status events
+- [ ] Add concise execution/provenance status events
 - [ ] Add sandboxed code/data execution
-- [ ] Add citations/source-lineage model
 - [ ] Add project-level context/memory strategy
 - [ ] Add reusable server-side Ananas API
-- [ ] Add tenant/project isolation primitives before multi-user vertical deployment
+- [ ] Add project/tenant isolation primitives before multi-user vertical deployment
 
-### Provider/runtime validation
+### Provider/runtime PoCs
 
 - [ ] Validate NVIDIA provider route end to end
 - [ ] Validate OpenRouter alternate/fallback route
@@ -53,30 +75,30 @@ Goal: deliver a useful home-grown conversational work assistant before specializ
 - [ ] Add repeatable provider smoke tests
 - [ ] Record latency, token usage, reliability, and task outcomes
 
-### Phase-1 exit gate
+### Phase-1 / MVP exit gate
 
-A user can open Ananas in a browser, create/resume a project, converse over attached files, invoke tools, generate/edit persistent artifacts, execute a sandboxed task, inspect route/cost status, and access the same core through an API.
+Phase 1 is not complete because the UI shell exists. It exits only when every acceptance gate in [`MVP.md`](MVP.md) passes from a clean supported deployment path.
 
-See [`MVP.md`](MVP.md).
+## Phase 2 — Portable Skills, MCP & Capability Registry — Active / Planned
 
-## Phase 2 — Portable Skills, MCP & Capability Registry — Active/Planned
-
-### Completed
+### Completed foundation
 
 - [x] Define four Tier-1 upstream repositories + one Tier-2 evaluation repository
-- [x] Pin current upstream revisions in `config/upstreams.yaml`
+- [x] Pin reviewed upstream revisions in `config/upstreams.yaml`
 - [x] Define no-wholesale-vendoring policy
+- [x] Add registry CI validation
+- [x] Add reproducible pinned-source fetch into Git-ignored `.ananas/upstreams/`
 - [x] Define benchmark gate for NeMo Agent Toolkit
 
 ### Remaining
 
-- [ ] Build upstream registry validation/sync tooling
 - [ ] Build curated skills installation workflow
 - [ ] Add MCP configuration/adapter layer
 - [ ] Record provenance, version, license, and permission scope for installed capabilities
 - [ ] Add supply-chain checks before skill/tool promotion
 - [ ] Add compatibility tests across Ananas tool adapters
 - [ ] Keep provider/tool-specific APIs behind Ananas-owned interfaces
+- [ ] Establish update workflow that reviews diffs before changing pins
 
 ## Phase 3 — Artifact, Context & Knowledge Layer — Planned
 
@@ -127,7 +149,8 @@ Goal: prove that Ananas can become a serious niche product without forking the c
 - [x] Define DIRT as first Ananas vertical
 - [x] Define audit-first / clarity-before-automation thesis
 - [x] Define minimum No-PHI audit data contract
-- [x] Define Human Reviewer Queue wireframe
+- [x] Build editable Human Reviewer Queue wireframe
+- [x] Build editable No-PHI data-contract board
 - [x] Define evidence, confidence, SOP/action, reviewer disposition, and outcome loop
 - [x] Define DIRT MVP non-goals
 
@@ -157,15 +180,17 @@ Existing RCM/data work should be reused rather than rebuilt. Integration candida
 - [ ] Preserve lineage and QA controls already built
 - [ ] Separate PHI-bearing source processing from the No-PHI intelligence boundary
 - [ ] Add cloud-native deployment path where justified
-- [ ] Avoid moving legacy implementation assumptions into Ananas core
+- [ ] Avoid moving legacy implementation assumptions into Ananas Core
+
+The current `aashaukatc/rcm-data-platform` assessment is tracked separately so existing work is reused rather than rewritten blindly.
 
 ## Phase 8 — Additional Vertical Products — Planned
 
 - [ ] Define Continuara vertical contract
-- [ ] Reuse Ananas core chat/artifacts/tools/API
+- [ ] Reuse Ananas Core chat/artifacts/tools/API
 - [ ] Add independent clinical/privacy/workflow controls appropriate to that product
 - [ ] Add vertical-specific evaluations
-- [ ] Prove second vertical can be launched without core fork
+- [ ] Prove second vertical can launch without a core fork
 - [ ] Establish vertical-pack template/scaffolding
 
 ## Phase 9 — Production Platform Hardening — Planned
@@ -191,16 +216,18 @@ Existing RCM/data work should be reused rather than rebuilt. Integration candida
 - [ ] Contribute reusable fixes upstream rather than maintaining unnecessary forks
 - [ ] Track external adoption and contributions
 
-## Current Critical Path
+## Current critical path
 
-1. Finish the Phase-1 conversational shell around the existing web surface.
-2. Implement persistent project/file/artifact contracts.
-3. Validate NVIDIA/OpenRouter/LiteLLM routes.
-4. Add tool/skill runtime and first curated upstream capabilities.
-5. Add API + telemetry/cost accounting.
-6. Build the DIRT vertical pack against the shared core.
-7. Connect existing RCM data assets through a defined DIRT adapter instead of rewriting them.
+1. Complete the provider-routing PoC and repeatable smoke tests.
+2. Implement real project/session persistence and isolation.
+3. Implement file-grounded context + source lineage.
+4. Implement artifact persistence/revision.
+5. Integrate the first curated Tier-1 tool/skill behind an Ananas adapter.
+6. Implement sandbox + API parity.
+7. Instrument reliability/token/cost/outcome telemetry.
+8. Pass the Core MVP acceptance gates.
+9. Then move DIRT from design-defined into vertical build while reusing existing RCM data assets.
 
-## Operating Rule
+## Operating rule
 
-> **Build one reusable core. Measure it. Specialize through vertical packs. Reuse upstream capability before owning more code.**
+> **Freeze scope. Prove risky assumptions. Validate the UX. Build the smallest real product. Pilot with evidence. Reuse upstream and existing project assets before owning more code.**
