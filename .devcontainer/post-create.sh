@@ -13,4 +13,9 @@ fi
 bash scripts/bootstrap.sh
 bash scripts/sync-continue-secrets.sh
 
+if [[ -f package.json ]]; then
+  printf '\nInstalling Ananas web workspace dependencies...\n'
+  npm install
+fi
+
 printf '\nReady. Run: bash scripts/healthcheck.sh\n'
