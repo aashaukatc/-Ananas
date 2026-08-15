@@ -1,165 +1,206 @@
 # 🍍 Ananas Roadmap
 
-This roadmap is the canonical phase-level plan for Ananas. Detailed execution state lives in GitHub Issues and the three GitHub Projects defined in [`docs/PROJECTS.md`](PROJECTS.md).
+This roadmap is the canonical phase-level plan for Ananas. The product sequence is now explicit: **foundation → general-purpose conversational MVP → reusable capability layer → DIRT RCM vertical → additional verticals**.
 
-## Phase 0 — Repository Foundation — Complete
+## Phase 0 — Cloud-Native Engineering Foundation — Complete
 
 - [x] Public GitHub repository
-- [x] Project README
-- [x] Combined Python/Node/cloud `.gitignore`
-- [x] Safe environment template
 - [x] Codespaces Dev Container
-- [x] Continue configuration template
-- [x] Bootstrap and health-check scripts
-- [x] Foundation CI workflow
-- [x] Architecture and security documentation
-- [x] Community Code of Conduct
-- [x] Branded Issue templates
-- [x] Initial Command Center web surface
-- [x] Brand, motion, Figma and Canva manifests
-- [x] Upstream integration registry
+- [x] Continue configuration
+- [x] Node/Python baseline
+- [x] Google Cloud persistent-workspace bootstrap
+- [x] LiteLLM provider-neutral routing design
+- [x] NVIDIA + OpenRouter configuration paths
+- [x] Health checks and bootstrap automation
+- [x] Security/contribution/community baseline
+- [x] Initial web application surface
+- [x] Model benchmark principles
 
-## Phase 1 — Reliable AI Coding Workspace — Active
+This phase remains important infrastructure, but it is no longer treated as the product itself.
 
-### Completed foundation
+## Phase 1 — Ananas Conversational MVP — Active
 
-- [x] Codespaces workspace validated with `scripts/healthcheck.sh`
-- [x] Secret synchronization path for Continue established
-- [x] NVIDIA and OpenRouter configuration points documented
-- [x] Provider-neutral LiteLLM architecture established
-- [x] Model-selection principle and benchmark adoption gate documented
+Goal: deliver a useful home-grown conversational work assistant before specializing it into any one domain.
 
-### Remaining
+### Product contract — complete
 
-- [ ] Replace/verify the NVIDIA Build API credential and pass a direct provider smoke test
-- [ ] Configure the OpenRouter fallback credential
-- [ ] Validate Continue → NVIDIA end to end
-- [ ] Validate Continue → OpenRouter end to end
-- [ ] Validate LiteLLM NVIDIA → OpenRouter failover
-- [ ] Add repeatable provider smoke-test tooling
-- [ ] Record latency, token usage, reliability and task-success metrics
+- [x] Define Ananas as standalone core rather than an RCM/coding-only product
+- [x] Define Phase-1 MVP and non-goals
+- [x] Define core → vertical product contract
+- [x] Create Figma Ananas chat/workspace wireframe
+- [x] Establish Figma ↔ GitHub design governance
 
-## Phase 2 — Portable Agent Skills & MCP — Planned
+### Build
 
-### Completed foundation
+- [ ] Make conversation the primary application surface
+- [ ] Add persistent projects/workspaces
+- [ ] Add file upload + file-grounded context
+- [ ] Add persistent artifact/canvas model
+- [ ] Support document/code/table/schema/chart artifact types
+- [ ] Add tool/skill invocation runtime
+- [ ] Add concise execution-status events
+- [ ] Add sandboxed code/data execution
+- [ ] Add citations/source-lineage model
+- [ ] Add project-level context/memory strategy
+- [ ] Add reusable server-side Ananas API
+- [ ] Add tenant/project isolation primitives before multi-user vertical deployment
 
-- [x] Add upstream registry covering NVIDIA Skills, Microsoft Skills, MCP reference servers and NeMo Agent Toolkit
-- [x] Define curated-install / reference-and-pin / evaluate-before-adoption policies
+### Provider/runtime validation
 
-### Remaining
+- [ ] Validate NVIDIA provider route end to end
+- [ ] Validate OpenRouter alternate/fallback route
+- [ ] Validate LiteLLM failover
+- [ ] Add repeatable provider smoke tests
+- [ ] Record latency, token usage, reliability, and task outcomes
 
-- [ ] Build upstream registry validation and sync tooling
-- [ ] Add curated Agent Skills installation workflow
-- [ ] Add MCP server configuration layer
-- [ ] Add provenance, version and license checks
-- [ ] Add compatibility tests for Continue + portable skills
-- [ ] Publish the first Ananas Skills Bridge compatibility report
+### Phase-1 exit gate
 
-## Phase 3 — Reproducible Coding Benchmark Platform — Planned
+A user can open Ananas in a browser, create/resume a project, converse over attached files, invoke tools, generate/edit persistent artifacts, execute a sandboxed task, inspect route/cost status, and access the same core through an API.
 
-### Completed foundation
+See [`MVP.md`](MVP.md).
 
-- [x] Define brownfield benchmark protocol
-- [x] Define correctness, autonomy, latency and cost dimensions
-- [x] Define default model adoption gate
+## Phase 2 — Portable Skills, MCP & Capability Registry — Active/Planned
 
-### Remaining
+### Completed
 
-- [ ] Add executable brownfield benchmark fixture
-- [ ] Seed known concurrency/idempotency/retry defects
-- [ ] Add hidden tests
-- [ ] Automate benchmark runs
-- [ ] Capture time-to-first-passing-patch
-- [ ] Capture human interventions
-- [ ] Capture total inference cost
-- [ ] Compare Nemotron against a frontier coding baseline
-- [ ] Publish reproducible benchmark results
-
-## Phase 4 — Autonomous Engineering Loop — Planned
-
-- [ ] Define task intake schema
-- [ ] Implement repository inspection stage
-- [ ] Implement structured planning stage
-- [ ] Implement plan → modify → test → review loop
-- [ ] Add bounded retry policy
-- [ ] Add rollback on validation failure
-- [ ] Add model escalation for failed/high-risk tasks
-- [ ] Add structured execution logs
-- [ ] Add human approval gates for sensitive operations
-- [ ] Surface task state in the Ananas Command Center
-
-## Phase 5 — Google Cloud Deployment Layer — Planned
-
-### Completed foundation
-
-- [x] Add hardened GCE bootstrap script
-- [x] Bind code-server and LiteLLM to localhost
-- [x] Document SSH/IAP tunneling model
-- [x] Keep remote AI inference decoupled from VM compute
+- [x] Define four Tier-1 upstream repositories + one Tier-2 evaluation repository
+- [x] Pin current upstream revisions in `config/upstreams.yaml`
+- [x] Define no-wholesale-vendoring policy
+- [x] Define benchmark gate for NeMo Agent Toolkit
 
 ### Remaining
 
-- [ ] Confirm current Google Cloud student credit coverage
-- [ ] Create dedicated Ananas GCP project
-- [ ] Establish least-privilege IAM
-- [ ] Define environment naming and resource labels
-- [ ] Select deployment targets by workload
-- [ ] Add infrastructure-as-code after requirements stabilize
-- [ ] Add CI deployment gates
-- [ ] Add budget alerts and shutdown controls
+- [ ] Build upstream registry validation/sync tooling
+- [ ] Build curated skills installation workflow
+- [ ] Add MCP configuration/adapter layer
+- [ ] Record provenance, version, license, and permission scope for installed capabilities
+- [ ] Add supply-chain checks before skill/tool promotion
+- [ ] Add compatibility tests across Ananas tool adapters
+- [ ] Keep provider/tool-specific APIs behind Ananas-owned interfaces
 
-## Phase 6 — Observability & Cost Intelligence — Planned
+## Phase 3 — Artifact, Context & Knowledge Layer — Planned
+
+- [ ] Define persistent artifact storage contract
+- [ ] Define project file/source indexing contract
+- [ ] Implement retrieval strategy
+- [ ] Implement context compression/summarization
+- [ ] Implement project memory boundaries
+- [ ] Track source lineage into artifacts
+- [ ] Support artifact revisions/version history
+- [ ] Add export/share boundaries
+- [ ] Add context-quality evaluations
+
+**Rule:** practical long-context capability comes from routing + retrieval + persistent project state; do not bind product claims to a single model's advertised context window.
+
+## Phase 4 — Execution, Agents & Automation — Planned
+
+- [ ] Define task/execution schema
+- [ ] Implement plan → tool/code → validate → artifact loop
+- [ ] Add bounded retries and rollback
+- [ ] Add approval gates for sensitive actions
+- [ ] Add model escalation policy
+- [ ] Add structured execution/audit logs
+- [ ] Benchmark lightweight Ananas orchestration baseline
+- [ ] Evaluate NVIDIA NeMo Agent Toolkit against that baseline
+- [ ] Adopt only components that reduce owned complexity or improve successful tasks per dollar
+
+## Phase 5 — Observability & Compute Economics — Planned
 
 - [ ] Define telemetry event schema
-- [ ] Capture model/provider latency
-- [ ] Capture token usage
-- [ ] Capture inference cost
-- [ ] Capture retries/fallback events
-- [ ] Capture successful tasks per dollar
-- [ ] Capture infrastructure consumption
-- [ ] Add Command Center observability views
-- [ ] Add budget/policy alerts
+- [ ] Capture model/provider route
+- [ ] Capture latency and time-to-first-result
+- [ ] Capture token consumption
+- [ ] Capture provider/inference cost
+- [ ] Capture retries/fallbacks
+- [ ] Capture tool/execution failures
+- [ ] Capture evaluated task outcome
+- [ ] Compute successful tasks per dollar
+- [ ] Add budget thresholds and route throttling/escalation policy
+- [ ] Add user-visible usage/cost surface
 
-## Phase 7 — Production Security Hardening — Planned
+## Phase 6 — DIRT RCM Vertical MVP — Planned, Design Defined
 
-### Completed foundation
+Goal: prove that Ananas can become a serious niche product without forking the core.
 
-- [x] Security policy documented
-- [x] Secret-handling rules documented
-- [x] Localhost-first service exposure documented
+### Completed definition/design
 
-### Remaining
+- [x] Define DIRT as first Ananas vertical
+- [x] Define audit-first / clarity-before-automation thesis
+- [x] Define minimum No-PHI audit data contract
+- [x] Define Human Reviewer Queue wireframe
+- [x] Define evidence, confidence, SOP/action, reviewer disposition, and outcome loop
+- [x] Define DIRT MVP non-goals
 
-- [ ] Add secret scanning
-- [ ] Add SAST
-- [ ] Add dependency vulnerability scanning
-- [ ] Add dependency/supply-chain policy checks
-- [ ] Configure branch protection and required checks
-- [ ] Define release/versioning strategy
-- [ ] Define backup/recovery procedures
-- [ ] Add operational runbooks
-- [ ] Add agent permission and high-risk execution controls
+### Build
 
-## Phase 8 — Open-Source Ecosystem & Partnerships — Planned
+- [ ] Implement DIRT vertical-pack package/module boundary
+- [ ] Implement No-PHI ingress validator with reject/quarantine path
+- [ ] Map normalized claim/line data into `audit_claim` and `audit_claim_line`
+- [ ] Implement `audit_signal` generation contract
+- [ ] Implement `review_event` immutable audit contract
+- [ ] Build AR/denial/EDI signal evaluation fixtures
+- [ ] Build reviewer queue UI
+- [ ] Build reviewer detail/evidence panel
+- [ ] Build governed SOP/action recommendations
+- [ ] Add multi-tenant data partitioning
+- [ ] Add RCM-specific evaluation suite
+- [ ] Complete privacy/security review before production de-identification claims
 
-- [ ] Establish Discussions categories and community operating cadence
-- [ ] Publish contributor-ready good-first-issue backlog
-- [ ] Publish compatibility and benchmark reports
-- [ ] Contribute fixes upstream where Ananas discovers upstream defects
-- [ ] Establish NVIDIA / Continue / MCP / Microsoft ecosystem collaboration targets
-- [ ] Prepare partnership-ready technical evidence package
-- [ ] Track external users, contributors and reproducible adoption signals
+See [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md).
+
+## Phase 7 — DIRT Data-Platform Integration — Planned
+
+Existing RCM/data work should be reused rather than rebuilt. Integration candidates are evaluated behind DIRT-owned adapters and data contracts.
+
+- [ ] Inventory existing RCM repositories and determine canonical DIRT data repository
+- [ ] Map existing intake/clean-room/warehouse assets to DIRT vertical interfaces
+- [ ] Preserve lineage and QA controls already built
+- [ ] Separate PHI-bearing source processing from the No-PHI intelligence boundary
+- [ ] Add cloud-native deployment path where justified
+- [ ] Avoid moving legacy implementation assumptions into Ananas core
+
+## Phase 8 — Additional Vertical Products — Planned
+
+- [ ] Define Continuara vertical contract
+- [ ] Reuse Ananas core chat/artifacts/tools/API
+- [ ] Add independent clinical/privacy/workflow controls appropriate to that product
+- [ ] Add vertical-specific evaluations
+- [ ] Prove second vertical can be launched without core fork
+- [ ] Establish vertical-pack template/scaffolding
+
+## Phase 9 — Production Platform Hardening — Planned
+
+- [ ] Secret scanning
+- [ ] SAST/dependency scanning
+- [ ] supply-chain policy enforcement
+- [ ] branch protection + required checks
+- [ ] release/versioning strategy
+- [ ] workload identity/OIDC where possible
+- [ ] backup/recovery procedures
+- [ ] operational runbooks
+- [ ] tenant isolation tests
+- [ ] rate/budget controls
+- [ ] high-risk tool/action permission controls
+
+## Phase 10 — Open-Source Ecosystem — Planned
+
+- [ ] Publish compatibility reports
+- [ ] Publish benchmark results
+- [ ] Create contributor-ready issues
+- [ ] Use GitHub Discussions for architecture/product RFCs when enabled
+- [ ] Contribute reusable fixes upstream rather than maintaining unnecessary forks
+- [ ] Track external adoption and contributions
 
 ## Current Critical Path
 
-1. Validate a correct NVIDIA Build API credential.
-2. Configure OpenRouter fallback.
-3. Prove direct provider → LiteLLM → Continue routing.
-4. Instrument reliability, latency and cost.
-5. Turn the benchmark specification into an executable fixture.
-6. Begin portable Agent Skills + MCP interoperability work.
-7. Introduce GCP persistence only when a workload requires it.
+1. Finish the Phase-1 conversational shell around the existing web surface.
+2. Implement persistent project/file/artifact contracts.
+3. Validate NVIDIA/OpenRouter/LiteLLM routes.
+4. Add tool/skill runtime and first curated upstream capabilities.
+5. Add API + telemetry/cost accounting.
+6. Build the DIRT vertical pack against the shared core.
+7. Connect existing RCM data assets through a defined DIRT adapter instead of rewriting them.
 
 ## Operating Rule
 
-> **Stabilize first. Measure second. Automate third. Scale only after evidence.**
+> **Build one reusable core. Measure it. Specialize through vertical packs. Reuse upstream capability before owning more code.**
