@@ -16,7 +16,7 @@ This file is a concise status view. It does not replace `SCOPE.md`, `DELIVERY_LI
 | MVP | ⚪ Not yet achieved | Real implementation + all `MVP.md` acceptance gates |
 | Pilot / Beta | ⚪ Not started | Begins after MVP release-candidate + required security/ops readiness |
 
-Delivery-gate execution is tracked as a dedicated GitHub Issue so stage evidence stays visible beside the implementation backlog.
+Delivery-gate execution: [GitHub Issue #37](https://github.com/aashaukatc/-Ananas/issues/37).
 
 ## Product surfaces
 
