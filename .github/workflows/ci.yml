@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate shell scripts
+        run: |
+          set -euo pipefail
+          find scripts .devcontainer -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
+
+      - name: Check for accidentally committed private keys
+        run: |
+          set -euo pipefail
+          if git grep -nE -- '-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----' ':!*.example'; then
+            echo 'Private-key material detected.' >&2
+            exit 1
+          fi
+
+      - name: Run workspace health check
+        run: bash scripts/healthcheck.sh
