@@ -36,7 +36,7 @@ This phase remains important infrastructure, but it is **not the product itself*
 
 ## Phase 1 — Ananas Conversational MVP — Active
 
-Goal: deliver a useful home-grown conversational work assistant before specializing it into any one domain.
+Goal: deliver a useful home-grown conversational work assistant before specializing it into any one real domain.
 
 ### Scope/product contract — complete
 
@@ -66,6 +66,7 @@ Goal: deliver a useful home-grown conversational work assistant before specializ
 - [ ] Add project-level context/memory strategy
 - [ ] Add reusable server-side Ananas API
 - [ ] Add project/tenant isolation primitives before multi-user vertical deployment
+- [ ] Implement a **minimal synthetic vertical-pack fixture** that registers/loads through the future vertical interface without adding DIRT/Continuara logic or modifying core contracts
 
 ### Provider/runtime PoCs
 
@@ -79,12 +80,15 @@ Goal: deliver a useful home-grown conversational work assistant before specializ
 
 Phase 1 is not complete because the UI shell exists. It exits only when every acceptance gate in [`MVP.md`](MVP.md) passes from a clean supported deployment path.
 
+The synthetic vertical fixture is a **Core interface test only**. A working DIRT or Continuara product is not a Phase-1 dependency.
+
 ## Phase 2 — Portable Skills, MCP & Capability Registry — Active / Planned
 
 ### Completed foundation
 
 - [x] Define four Tier-1 upstream repositories + one Tier-2 evaluation repository
 - [x] Pin reviewed upstream revisions in `config/upstreams.yaml`
+- [x] Record provenance/license/security-review state in the canonical registry
 - [x] Define no-wholesale-vendoring policy
 - [x] Add registry CI validation
 - [x] Add reproducible pinned-source fetch into Git-ignored `.ananas/upstreams/`
@@ -94,8 +98,8 @@ Phase 1 is not complete because the UI shell exists. It exits only when every ac
 
 - [ ] Build curated skills installation workflow
 - [ ] Add MCP configuration/adapter layer
-- [ ] Record provenance, version, license, and permission scope for installed capabilities
-- [ ] Add supply-chain checks before skill/tool promotion
+- [ ] Record provenance, version, license, and permission scope for each promoted/installed capability
+- [ ] Add component-level supply-chain checks before skill/tool promotion
 - [ ] Add compatibility tests across Ananas tool adapters
 - [ ] Keep provider/tool-specific APIs behind Ananas-owned interfaces
 - [ ] Establish update workflow that reviews diffs before changing pins
@@ -148,26 +152,32 @@ Goal: prove that Ananas can become a serious niche product without forking the c
 
 - [x] Define DIRT as first Ananas vertical
 - [x] Define audit-first / clarity-before-automation thesis
-- [x] Define minimum No-PHI audit data contract
+- [x] Define privacy-gated No-PHI candidate architecture rather than treating a field list/hash as de-identification proof
+- [x] Separate protected exact-date/source preprocessing from the default external-model profile
+- [x] Bind claim lines/signals to immutable ingestion snapshot instances
+- [x] Define assignment and reviewer event history
+- [x] Persist immutable model/policy/ruleset/privacy-profile provenance on signals
 - [x] Build editable Human Reviewer Queue wireframe
-- [x] Build editable No-PHI data-contract board
+- [x] Build editable privacy/data-contract board
 - [x] Define evidence, confidence, SOP/action, reviewer disposition, and outcome loop
 - [x] Define DIRT MVP non-goals
 
 ### Build
 
 - [ ] Implement DIRT vertical-pack package/module boundary
-- [ ] Implement No-PHI ingress validator with reject/quarantine path
-- [ ] Map normalized claim/line data into `audit_claim` and `audit_claim_line`
+- [ ] Implement protected normalization/de-identification adapter
+- [ ] Implement privacy ingress validator with reject/quarantine path
+- [ ] Map normalized data into `audit_claim_snapshot` and `audit_claim_line`
 - [ ] Implement `audit_signal` generation contract
-- [ ] Implement `review_event` immutable audit contract
+- [ ] Implement `assignment_event` ownership history
+- [ ] Implement `review_event` immutable reviewer audit contract
 - [ ] Build AR/denial/EDI signal evaluation fixtures
 - [ ] Build reviewer queue UI
 - [ ] Build reviewer detail/evidence panel
 - [ ] Build governed SOP/action recommendations
 - [ ] Add multi-tenant data partitioning
 - [ ] Add RCM-specific evaluation suite
-- [ ] Complete privacy/security review before production de-identification claims
+- [ ] Complete formal privacy/security review before production No-PHI/de-identification claims
 
 See [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md).
 
@@ -178,7 +188,8 @@ Existing RCM/data work should be reused rather than rebuilt. Integration candida
 - [ ] Inventory existing RCM repositories and determine canonical DIRT data repository
 - [ ] Map existing intake/clean-room/warehouse assets to DIRT vertical interfaces
 - [ ] Preserve lineage and QA controls already built
-- [ ] Separate PHI-bearing source processing from the No-PHI intelligence boundary
+- [ ] Keep exact patient/source identifiers and patient-event dates inside the protected source/preprocessing boundary where required
+- [ ] Emit only the approved privacy-profile fields to the external-model intelligence path
 - [ ] Add cloud-native deployment path where justified
 - [ ] Avoid moving legacy implementation assumptions into Ananas Core
 
@@ -190,8 +201,8 @@ The current `aashaukatc/rcm-data-platform` assessment is tracked separately so e
 - [ ] Reuse Ananas Core chat/artifacts/tools/API
 - [ ] Add independent clinical/privacy/workflow controls appropriate to that product
 - [ ] Add vertical-specific evaluations
-- [ ] Prove second vertical can launch without a core fork
-- [ ] Establish vertical-pack template/scaffolding
+- [ ] Prove second real vertical can launch without a core fork
+- [ ] Establish vertical-pack template/scaffolding from the Phase-1 synthetic fixture
 
 ## Phase 9 — Production Platform Hardening — Planned
 
@@ -224,9 +235,10 @@ The current `aashaukatc/rcm-data-platform` assessment is tracked separately so e
 4. Implement artifact persistence/revision.
 5. Integrate the first curated Tier-1 tool/skill behind an Ananas adapter.
 6. Implement sandbox + API parity.
-7. Instrument reliability/token/cost/outcome telemetry.
-8. Pass the Core MVP acceptance gates.
-9. Then move DIRT from design-defined into vertical build while reusing existing RCM data assets.
+7. Implement/load the minimal synthetic vertical fixture.
+8. Instrument reliability/token/cost/outcome telemetry.
+9. Pass the Core MVP acceptance gates.
+10. Then move DIRT from design-defined into vertical build while reusing existing RCM data assets.
 
 ## Operating rule
 
