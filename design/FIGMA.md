@@ -8,13 +8,13 @@ This is the canonical editable product/prototype file for the current Ananas arc
 
 | Page | Purpose | Page ID | Primary frame |
 |---|---|---|---|
-| `00 — Product Architecture` | Core → vertical product model | `0:1` | `1:2` — `Ananas Core → Vertical Products` |
-| `01 — Ananas Chat MVP` | Chat-first project/workspace + artifact layout | `1:21` | `3:2` — `Ananas / Chat MVP / Desktop` |
-| `02 — DIRT Reviewer Queue` | No-PHI revenue-prioritized human review workflow | `1:37` | `3:84` — `DIRT / Human Reviewer Queue / Desktop` |
-| `03 — No-PHI Data Contract` | Ingress boundary + claim/line/signal/review schema | `1:56` | `3:176` — `DIRT / No-PHI Audit Data Contract` |
-| `04 — Delivery Lifecycle & Scope` | Scope → PoC → Prototype → MVP → Pilot/Beta gates | `3:250` | `3:251` — `Ananas / Delivery Lifecycle / Scope Gates` |
+| `00 — Product Architecture` | Core → vertical product model | `0:1` | `6:2` — `Ananas Core → Vertical Products` |
+| `01 — Ananas Chat MVP` | Chat-first project/workspace + artifact layout | `1:21` | `6:34` — `Ananas / Chat MVP / Desktop` |
+| `02 — DIRT Reviewer Queue` | Privacy-gated revenue-prioritized human review workflow | `1:37` | `6:118` — `DIRT / Human Reviewer Queue / Desktop` |
+| `03 — No-PHI Data Contract` | Protected preprocessing → privacy gate → immutable snapshot/signal/events | `1:56` | `6:212` — `DIRT / Privacy-Gated Audit Data Contract` |
+| `04 — Delivery Lifecycle & Scope` | Scope → PoC → Prototype → MVP → Pilot/Beta gates | `3:250` | `6:295` — `Ananas / Delivery Lifecycle / Scope Gates` |
 
-All five pages now contain editable design content; page names alone are not treated as completion evidence.
+All five pages were rebuilt in one final atomic design write and each currently has one editable top-level frame. These IDs are now frozen in the repository manifest for this prototype revision.
 
 ## Legacy design reference
 
@@ -29,9 +29,11 @@ It is **not** the active Phase-1 product-definition file. Do not implement the o
 - Visual architecture: built
 - Chat MVP desktop wireframe: built
 - DIRT reviewer queue wireframe: built
-- No-PHI data-contract board: built
+- Privacy-gated audit/data-contract board: built
 - Delivery lifecycle/scope board: built
 - Interaction wiring / usability walkthrough evidence: **still required before the Prototype gate is declared complete**
+
+The Figma file contains synthetic/example data only. A visible queue, control, model route, artifact, or tool state is not proof of production behavior.
 
 ## Design governance
 
