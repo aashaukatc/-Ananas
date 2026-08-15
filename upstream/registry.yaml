@@ -1,0 +1,26 @@
+repos:
+  - repo: NVIDIA/skills
+    type: agent-skills
+    tier: 1
+    license: Apache-2.0 + CC-BY-4.0
+    install: npx skills@latest add nvidia/skills
+    policy: curated-install
+  - repo: vercel-labs/skills
+    type: skill-distribution
+    tier: 1
+    license: MIT
+    policy: dependency
+  - repo: microsoft/skills
+    type: agent-skills-mcp
+    tier: 1
+    license: MIT
+    policy: curated-install
+  - repo: modelcontextprotocol/servers
+    type: mcp-reference
+    tier: 1
+    policy: reference-and-pin
+  - repo: NVIDIA/NeMo-Agent-Toolkit
+    type: multi-agent-framework
+    tier: 2
+    license: Apache-2.0
+    policy: evaluate-before-adoption

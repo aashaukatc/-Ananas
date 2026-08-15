@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --ananas-forest: #0B1511;
+  --ananas-surface: #122019;
+  --ananas-surface-2: #182A21;
+  --ananas-lime: #C8FF3D;
+  --ananas-leaf: #48D17A;
+  --ananas-gold: #FFC857;
+  --ananas-cream: #F5F7ED;
+  --ananas-muted: #95A39B;
+  --ananas-border: #26382E;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--ananas-forest); }
+body {
+  margin: 0;
+  color: var(--ananas-cream);
+  background:
+    radial-gradient(circle at 85% 0%, rgba(200,255,61,.08), transparent 30%),
+    var(--ananas-forest);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+::selection { background: var(--ananas-lime); color: #08100c; }
