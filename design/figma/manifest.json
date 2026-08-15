@@ -1,0 +1,19 @@
+{
+  "name": "🍍 Ananas — Product System & UX",
+  "fileKey": "ElhDyoDtgwhQIFL7XujG4N",
+  "url": "https://www.figma.com/design/ElhDyoDtgwhQIFL7XujG4N",
+  "sourceOfTruth": false,
+  "canonicalSource": "GitHub repository documentation and production code",
+  "pages": [
+    {"pageId":"0:1","name":"01 — Brand System","artifacts":[{"nodeId":"1:10","name":"Ananas / Brand System","width":1440,"height":1000}]},
+    {"pageId":"1:7","name":"02 — Product UI","artifacts":[{"nodeId":"2:65","name":"Ananas / Command Center","width":1440,"height":1024}]},
+    {"pageId":"1:8","name":"03 — UX Wireframes","artifacts":[
+      {"nodeId":"2:191","name":"1. First-run onboarding","width":320,"height":610},
+      {"nodeId":"2:211","name":"2. Command center","width":320,"height":610},
+      {"nodeId":"2:232","name":"3. Skills registry","width":320,"height":610},
+      {"nodeId":"2:251","name":"4. Benchmark run","width":320,"height":610}
+    ]},
+    {"pageId":"1:9","name":"04 — Architecture & Collaboration","artifacts":[{"nodeId":"2:272","name":"Architecture Board","width":1600,"height":980}]},
+    {"pageId":"3:150","name":"05 — Motion & 3D","artifacts":[{"nodeId":"3:151","name":"Ananas / Motion & 3D","width":1440,"height":960}]}
+  ]
+}
