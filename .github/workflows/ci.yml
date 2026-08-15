@@ -23,6 +23,9 @@ jobs:
       - name: Validate upstream registry
         run: bash scripts/upstreams/validate-registry.sh
 
+      - name: Validate synthetic vertical fixture
+        run: bash scripts/verticals/validate-synthetic-fixture.sh
+
       - name: Check for accidentally committed private keys
         run: |
           set -euo pipefail
