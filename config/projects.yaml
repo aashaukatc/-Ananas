@@ -1,0 +1,117 @@
+version: 1
+repository: aashaukatc/-Ananas
+
+projects:
+  engineering_registry:
+    name: "🍍 Ananas — Engineering Registry"
+    layout: table
+    purpose: "Canonical inventory of all actionable engineering work."
+    import_repository_issues: true
+    fields:
+      status:
+        type: single_select
+        options: [Inbox, Triage, Ready, In Progress, Blocked, Review, Done]
+      priority:
+        type: single_select
+        options: [P0 Critical, P1 High, P2 Medium, P3 Low]
+      area:
+        type: multi_select
+        options: [Command Center, Codespaces, GCP, Continue, LiteLLM, NVIDIA, OpenRouter, Agent Skills, MCP, Benchmarks, CI/CD, Security, Docs, Community, Brand / UX]
+      category:
+        type: single_select
+        options: [Bug, Feature, Infrastructure, Security, Documentation, Research, Benchmark, Integration, Technical Debt, Community]
+      effort:
+        type: single_select
+        options: [XS, S, M, L, XL]
+      risk:
+        type: single_select
+        options: [Low, Medium, High, Critical]
+      target_release:
+        type: single_select
+        options: [Unscheduled, Next, Upcoming, Future]
+      upstream:
+        type: single_select
+        options: [None, Investigate, Reuse, Contribute, Fork]
+    views:
+      - {name: Registry, layout: table, group_by: Status, sort: [Priority, Updated]}
+      - {name: Triage Queue, layout: table, filter: "Status:Inbox,Triage"}
+      - {name: High Risk, layout: table, filter: "Risk:High,Critical OR Priority:P0 Critical,P1 High"}
+      - {name: Upstream Work, layout: table, filter: "Upstream:Investigate,Reuse,Contribute,Fork"}
+      - {name: Recently Done, layout: table, filter: "Status:Done"}
+
+  execution_board:
+    name: "⚡ Ananas — Execution Board"
+    layout: board
+    purpose: "Work deliberately selected for active delivery."
+    import_repository_issues: false
+    fields:
+      status:
+        type: single_select
+        options: [Ready, In Progress, Blocked, Review, Done]
+      priority:
+        type: single_select
+        options: [Critical, High, Normal, Low]
+      effort:
+        type: single_select
+        options: [Quick, Small, Medium, Large]
+      iteration:
+        type: iteration
+        cadence: 2_weeks
+      due_date: {type: date}
+      blocker_type:
+        type: single_select
+        options: [None, Dependency, Access/Credentials, Upstream, Infrastructure, Decision, Security]
+      execution_mode:
+        type: single_select
+        options: [Human, Agent-assisted, Autonomous, Hybrid]
+      validation:
+        type: single_select
+        options: [Not Started, Testing, CI Passing, Manual Review, Validated]
+    views:
+      - {name: Active Delivery, layout: board, group_by: Status}
+      - {name: Current Iteration, layout: board, filter: "Iteration:@current"}
+      - {name: Blocked, layout: table, filter: "Status:Blocked"}
+      - {name: Validation Queue, layout: table, filter: "Status:Review OR Validation:Testing,CI Passing,Manual Review"}
+      - {name: My Work, layout: board, filter: "assignee:@me"}
+
+  roadmap:
+    name: "🗺️ Ananas — Product & Platform Roadmap"
+    layout: roadmap
+    purpose: "Strategic phases, milestones, releases and major outcomes."
+    import_repository_issues: false
+    fields:
+      status:
+        type: single_select
+        options: [Planned, Active, At Risk, Blocked, Complete]
+      phase:
+        type: single_select
+        options: [Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6, Phase 7, Phase 8]
+      strategic_area:
+        type: multi_select
+        options: [AI / Models, Agent Platform, Developer Experience, Cloud Infrastructure, Product UI, Security, Benchmarks, Open Source, Community, Partnerships]
+      start_date: {type: date}
+      target_date: {type: date}
+      confidence:
+        type: single_select
+        options: [High, Medium, Low]
+      progress: {type: number, min: 0, max: 100}
+      impact:
+        type: single_select
+        options: [Transformational, High, Medium, Low]
+      dependency:
+        type: multi_select
+        options: [Models, Skills/MCP, GCP, GitHub, Security, UI, Benchmarking, Community]
+      milestone_type:
+        type: single_select
+        options: [Platform, Product, Infrastructure, Security, Community, Partnership, Release]
+    views:
+      - {name: Strategic Roadmap, layout: roadmap, group_by: Phase, start: Start Date, target: Target Date}
+      - {name: Current Phase, layout: table, filter: "Status:Active,At Risk,Blocked"}
+      - {name: At Risk, layout: table, filter: "Status:At Risk,Blocked OR Confidence:Low"}
+      - {name: By Strategic Area, layout: roadmap, group_by: Strategic Area}
+      - {name: Completed Milestones, layout: table, filter: "Status:Complete"}
+
+routing:
+  all_issues_and_prs: engineering_registry
+  execution_ready: execution_board
+  strategic_epic_or_milestone: roadmap
