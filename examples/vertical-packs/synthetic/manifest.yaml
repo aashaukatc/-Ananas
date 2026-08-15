@@ -1,0 +1,45 @@
+schema_version: 1
+id: synthetic-vertical
+name: Synthetic Vertical Fixture
+version: 0.1.0
+stage: poc-fixture
+production: false
+contains_real_domain_logic: false
+
+core_contract:
+  conversation: inherit
+  projects: inherit
+  files_context: inherit
+  artifacts: inherit
+  execution: inherit
+  model_routing: inherit
+  telemetry: inherit
+  api: inherit
+
+extensions:
+  policies:
+    - id: synthetic.read_only
+      description: Fixture policy proving a vertical can add a bounded rule without replacing core policy machinery.
+  schemas:
+    - id: synthetic.example_record.v1
+      description: Non-sensitive synthetic record used only to test vertical schema registration.
+  skills: []
+  connectors: []
+  retrieval_corpora: []
+  ui_modules: []
+  evaluations:
+    - id: synthetic.registration_smoke_test
+      purpose: Prove registration/loading without changing core conversation, routing, execution, or artifact contracts.
+
+permissions:
+  network: none
+  filesystem: none
+  secrets: []
+  external_actions: none
+
+acceptance:
+  - manifest validates against the future vertical-pack schema
+  - core can discover and load the fixture without code changes specific to this fixture
+  - disabling/removing the fixture leaves core behavior unchanged
+  - fixture receives no provider credentials directly
+  - fixture cannot widen execution permissions

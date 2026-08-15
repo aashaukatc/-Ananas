@@ -1,38 +1,50 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report incorrect Ananas or vertical behavior
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Bug
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Describe what is wrong and the user/operational impact.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Product / area
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+- Product: `Ananas Core | DIRT | Continuara | Shared Infrastructure | Ecosystem`
+- Area: `Conversation | Projects | Files/Context | Artifacts | Tools/Skills | Execution | API | Models/Routing | Telemetry | Security | UX | Vertical Pack | Cloud/DevEx`
+- Delivery Stage: `PoC | Prototype | MVP | Pilot/Beta | Post-MVP`
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Reproduction
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+1. Starting state / project
+2. Input or action
+3. Tool/model/provider if relevant
+4. Observed result
 
-**Additional context**
-Add any other context about the problem here.
+Include the smallest safe fixture that reproduces the issue. Never attach secrets, PHI, credentials, or private production data.
+
+## Expected behavior
+
+What should have happened according to the current product/stage contract?
+
+## Evidence
+
+Logs, screenshots, test output, trace IDs, source-lineage references, or CI links. Redact sensitive data.
+
+## Environment
+
+- Commit / branch:
+- Deployment: `Codespaces | local | GCP | other`
+- Browser/runtime:
+- Model/provider route if relevant:
+- Tool/skill/upstream pin if relevant:
+
+## Security / privacy impact
+
+Does this affect project isolation, secrets, permissions, PHI/no-PHI boundaries, source lineage, or external actions? If yes, explain severity and containment.
+
+## Workaround / rollback
+
+State any safe temporary workaround or how to disable the affected path.

@@ -49,6 +49,9 @@ Thumbs.db
 .continue/index/
 .continue/logs/
 
+# Ananas local state and pinned upstream source cache
+.ananas/upstreams/
+
 # Cloud / IaC local state
 .terraform/
 *.tfstate

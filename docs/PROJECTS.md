@@ -1,12 +1,18 @@
 # 🍍 Ananas GitHub Projects Operating System
 
-This document is the canonical operating model for the three Ananas GitHub Projects. GitHub remains the source of truth for work items; these projects provide three different planning lenses over that work.
+GitHub remains the source of truth for work items. Project views are planning lenses, not parallel specifications.
 
-## 1. 🍍 Ananas — Engineering Registry
+Every actionable item should be classifiable by:
 
-**Purpose:** canonical inventory of all actionable engineering work.
+- **Product:** Ananas Core, DIRT, Continuara, Shared Infrastructure, Ecosystem
+- **Delivery Stage:** Scope, PoC, Prototype, MVP, Pilot/Beta, Post-MVP
+- **Area:** Conversation, Projects, Files/Context, Artifacts, Tools/Skills, Execution, API, Models/Routing, Telemetry, Security, UX, Vertical Pack, Cloud/DevEx
 
-**Primary layout:** Table
+See [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md) for the evidence required to move between stages.
+
+## 1. 🍍 Engineering Registry
+
+**Purpose:** canonical inventory of engineering/product work.
 
 ### Fields
 
@@ -14,35 +20,28 @@ This document is the canonical operating model for the three Ananas GitHub Proje
 |---|---|---|
 | Status | Single select | Inbox, Triage, Ready, In Progress, Blocked, Review, Done |
 | Priority | Single select | P0 Critical, P1 High, P2 Medium, P3 Low |
-| Area | Multi select | Command Center, Codespaces, GCP, Continue, LiteLLM, NVIDIA, OpenRouter, Agent Skills, MCP, Benchmarks, CI/CD, Security, Docs, Community, Brand / UX |
+| Product | Single select | Ananas Core, DIRT, Continuara, Shared Infrastructure, Ecosystem |
+| Delivery Stage | Single select | Scope, PoC, Prototype, MVP, Pilot/Beta, Post-MVP |
+| Area | Multi select | Conversation, Projects, Files/Context, Artifacts, Tools/Skills, Execution, API, Models/Routing, Telemetry, Security, UX, Vertical Pack, Cloud/DevEx |
 | Category | Single select | Bug, Feature, Infrastructure, Security, Documentation, Research, Benchmark, Integration, Technical Debt, Community |
 | Effort | Single select | XS, S, M, L, XL |
 | Risk | Single select | Low, Medium, High, Critical |
-| Target Release | Single select | Unscheduled, Next, Upcoming, Future |
-| Upstream | Single select | None, Investigate, Reuse, Contribute, Fork |
-| Assignees | GitHub built-in | GitHub users |
+| Upstream | Single select | None, Inspect, Reuse, Adapt, Contribute, Evaluate-Tier2 |
+| Evidence | Text | Test, benchmark, Figma, log, ADR, or other validation reference |
 
 ### Views
 
-1. **Registry** — Table; group by Status; sort Priority ascending then Updated descending.
-2. **Triage Queue** — Table; filter `Status:Inbox,Triage`; sort Priority.
-3. **High Risk** — Table; filter `Risk:High,Critical` or `Priority:P0 Critical,P1 High`.
-4. **Upstream Work** — Table; filter `Upstream:Investigate,Reuse,Contribute,Fork`.
-5. **Recently Done** — Table; filter `Status:Done`; sort Updated descending.
+1. **Registry** — all work grouped by Status.
+2. **Current MVP** — Product `Ananas Core`, Delivery Stage `MVP`.
+3. **PoC Risks** — Delivery Stage `PoC`, grouped by Area.
+4. **Prototype / UX** — Delivery Stage `Prototype`.
+5. **DIRT** — Product `DIRT`.
+6. **Upstream Reuse** — Upstream != `None`.
+7. **High Risk** — Risk `High/Critical` or Priority `P0/P1`.
 
-### Automation
+## 2. ⚡ Execution Board
 
-- Auto-add every repository Issue and Pull Request to this project.
-- New items default to `Status = Inbox`.
-- Closed Issues / merged Pull Requests move to `Done` where feasible.
-
----
-
-## 2. ⚡ Ananas — Execution Board
-
-**Purpose:** only work that has been deliberately selected for active delivery.
-
-**Primary layout:** Board
+**Purpose:** only work deliberately selected for active delivery.
 
 ### Fields
 
@@ -50,99 +49,95 @@ This document is the canonical operating model for the three Ananas GitHub Proje
 |---|---|---|
 | Status | Single select | Ready, In Progress, Blocked, Review, Done |
 | Priority | Single select | Critical, High, Normal, Low |
+| Product | Single select | Ananas Core, DIRT, Continuara, Shared Infrastructure, Ecosystem |
+| Delivery Stage | Single select | Scope, PoC, Prototype, MVP, Pilot/Beta, Post-MVP |
 | Effort | Single select | Quick, Small, Medium, Large |
-| Iteration | Iteration | Two-week iterations |
-| Due Date | Date | Manual date |
-| Blocker Type | Single select | None, Dependency, Access/Credentials, Upstream, Infrastructure, Decision, Security |
+| Iteration | Iteration | short execution cycle |
+| Blocker Type | Single select | None, Dependency, Access/Credentials, Upstream, Infrastructure, Decision, Security, UX |
 | Execution Mode | Single select | Human, Agent-assisted, Autonomous, Hybrid |
-| Validation | Single select | Not Started, Testing, CI Passing, Manual Review, Validated |
-| Assignees | GitHub built-in | GitHub users |
-
-### Views
-
-1. **Active Delivery** — Board grouped by Status.
-2. **Current Iteration** — Board filtered to current iteration.
-3. **Blocked** — Table filtered to `Status:Blocked`, showing Blocker Type and Due Date.
-4. **Validation Queue** — Table filtered to `Status:Review` or `Validation:Testing,CI Passing,Manual Review`.
-5. **My Work** — Board filtered to the current assignee.
+| Validation | Single select | Not Started, Testing, CI Passing, UX Review, Security Review, Validated |
+| Evidence | Text | link/reference to validation |
 
 ### Operating rules
 
-- Do not bulk-import the repository backlog.
-- Add only execution-ready work.
 - Keep work-in-progress intentionally small.
-- Every `Done` item must have validation evidence.
+- Do not move an item to `Done` because code exists; attach validation evidence.
+- PoC items are done when the risk question is answered, even if the experiment is discarded.
+- Prototype items are done when the intended user flow is testable/reviewed, not when backend code is connected.
+- MVP items are done only when production-path acceptance criteria pass.
 - A blocked autonomous task must retry safely, diagnose, escalate, or stop; it must not loop indefinitely.
 
----
+## 3. 🗺️ Product & Platform Roadmap
 
-## 3. 🗺️ Ananas — Product & Platform Roadmap
-
-**Purpose:** strategic timeline for platform phases, major capabilities, releases, partnerships, and milestone-level outcomes.
-
-**Primary layout:** Roadmap
+**Purpose:** strategic timeline for product stages, platform capabilities, vertical releases, and production hardening.
 
 ### Fields
 
 | Field | Type | Options |
 |---|---|---|
 | Status | Single select | Planned, Active, At Risk, Blocked, Complete |
-| Phase | Single select | Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6, Phase 7, Phase 8 |
-| Strategic Area | Multi select | AI / Models, Agent Platform, Developer Experience, Cloud Infrastructure, Product UI, Security, Benchmarks, Open Source, Community, Partnerships |
-| Start Date | Date | Manual date |
-| Target Date | Date | Manual date |
+| Roadmap Phase | Single select | Phase 0–10 from `docs/ROADMAP.md` |
+| Product | Single select | Ananas Core, DIRT, Continuara, Shared Infrastructure, Ecosystem |
+| Delivery Stage | Single select | Scope, PoC, Prototype, MVP, Pilot/Beta, Post-MVP |
+| Strategic Area | Multi select | Product, AI/Models, Agent/Tool Platform, Data/Context, Cloud Infrastructure, Security, UX, Benchmarks, Open Source, Community |
 | Confidence | Single select | High, Medium, Low |
 | Progress | Number | 0–100 |
 | Impact | Single select | Transformational, High, Medium, Low |
-| Dependency | Multi select | Models, Skills/MCP, GCP, GitHub, Security, UI, Benchmarking, Community |
-| Milestone Type | Single select | Platform, Product, Infrastructure, Security, Community, Partnership, Release |
-| Assignees | GitHub built-in | GitHub users |
+| Dependency | Multi select | Projects/Files, Artifacts, Skills/MCP, Providers, GCP, Security, UX, RCM Data Platform, Benchmarking |
 
-### Views
+### Canonical roadmap phases
 
-1. **Strategic Roadmap** — Roadmap using Start Date and Target Date; group by Phase.
-2. **Current Phase** — Table filtered to `Status:Active,At Risk,Blocked`.
-3. **At Risk** — Table filtered to `Status:At Risk,Blocked` or `Confidence:Low`.
-4. **By Strategic Area** — Roadmap grouped by Strategic Area.
-5. **Completed Milestones** — Table filtered to `Status:Complete`.
+1. Phase 0 — Cloud-Native Engineering Foundation
+2. Phase 1 — Ananas Conversational MVP
+3. Phase 2 — Portable Skills, MCP & Capability Registry
+4. Phase 3 — Artifact, Context & Knowledge Layer
+5. Phase 4 — Execution, Agents & Automation
+6. Phase 5 — Observability & Compute Economics
+7. Phase 6 — DIRT RCM Vertical MVP
+8. Phase 7 — DIRT Data-Platform Integration
+9. Phase 8 — Additional Vertical Products
+10. Phase 9 — Production Platform Hardening
+11. Phase 10 — Open-Source Ecosystem
 
-### Initial phases
+`docs/ROADMAP.md` is the canonical phase definition; project views must not rename phases independently.
 
-1. Phase 1 — Reliable AI Coding Workspace
-2. Phase 2 — Portable Agent Skills & MCP
-3. Phase 3 — Reproducible Coding Benchmark Platform
-4. Phase 4 — Autonomous Engineering Loop
-5. Phase 5 — Google Cloud Deployment Layer
-6. Phase 6 — Observability & Cost Intelligence
-7. Phase 7 — Production Security Hardening
-8. Phase 8 — Open-Source Ecosystem & Partnerships
-
----
-
-## Routing Rules
+## Routing rules
 
 ```text
-Repository Issue / PR
-        ↓
-🍍 Engineering Registry
-        │
-        ├── selected for delivery ──► ⚡ Execution Board
-        │
-        └── strategic / epic work ──► 🗺️ Product & Platform Roadmap
+Issue / PR
+   ↓
+Engineering Registry
+   │
+   ├── selected now ──► Execution Board
+   │
+   └── strategic milestone ──► Product & Platform Roadmap
 ```
 
-One issue may appear in more than one project only when the additional project provides a genuinely different management lens.
+One Issue may appear in multiple projects only when each view adds a genuinely different management lens.
 
-## Source-of-truth rule
+## Evidence rule
 
-- GitHub Issue / Pull Request = work-item truth.
-- Repository documentation = architecture and policy truth.
-- GitHub Project fields = planning state.
-- Project views = presentation, not a second source of truth.
+Delivery Stage and Status are separate:
+
+- `Delivery Stage = PoC`, `Status = Done` means the technical question was answered.
+- `Delivery Stage = Prototype`, `Status = Done` means the UX prototype passed its review gate.
+- `Delivery Stage = MVP`, `Status = Done` means the real product requirement passed its MVP acceptance evidence.
+
+Never infer MVP completion from a completed PoC or polished prototype.
+
+## Source-of-truth hierarchy
+
+1. GitHub Issue / Pull Request — work-item truth.
+2. `docs/SCOPE.md` — Phase-1 boundary truth.
+3. `docs/DELIVERY_LIFECYCLE.md` — stage-gate truth.
+4. `docs/ROADMAP.md` — phase sequencing truth.
+5. `docs/MVP.md` — MVP acceptance truth.
+6. Figma — prototype/design truth.
+7. GitHub Project fields/views — planning state only.
 
 ## Maintenance cadence
 
-- **Daily while actively developing:** clear Inbox/Triage, update blockers, move execution status.
-- **Weekly:** review priorities, stale work, current iteration, roadmap risks.
-- **At every merge:** close or update the linked Issue and record validation evidence.
-- **Monthly:** review roadmap confidence, upstream dependencies, cost, security and release readiness.
+- **During active delivery:** update blockers/status/evidence as work changes.
+- **Weekly:** review scope pressure, PoC risks, prototype feedback, MVP blockers, stale upstream decisions, and compute cost.
+- **At every merge:** update/close linked Issues and attach validation evidence.
+- **At stage transitions:** verify the corresponding exit gate before changing `Delivery Stage`.

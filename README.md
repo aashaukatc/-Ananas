@@ -1,23 +1,138 @@
 # 🍍 Ananas
 
-**Cloud-native autonomous software engineering workspace.**
+**A cloud-native, provider-portable conversational work engine that starts general-purpose and specializes into high-value vertical products.**
 
-Ananas is a cloud-native autonomous software engineering workspace combining GitHub Codespaces, Google Cloud, Continue, NVIDIA Nemotron, OpenRouter, and a local LiteLLM routing layer for low-cost, hardware-independent AI development. It enables agentic coding, refactoring, testing, debugging, and deployment without local GPUs.
+Ananas is a home-grown assistant platform with a familiar modern conversational interaction model: conversation, files, projects, tools, skills, executable work, and persistent artifacts in one workspace. It is deliberately not tied to one industry or one model provider.
 
-## Why Ananas
+**Ananas Core** is the reusable platform. **DIRT RCM** is the first specialized vertical powered by that core. **Continuara** and future verticals reuse the same contracts rather than forking the platform.
 
-Ananas separates the **developer workspace** from **AI inference compute**:
+> Build the conversation, context, artifact, tool, routing, execution, and telemetry substrate once. Specialize through vertical packs.
 
-- **GitHub Codespaces** — primary browser-based development environment
-- **GitHub** — permanent source of truth, version control, CI/CD, and project governance
-- **Continue** — open-source AI coding interface inside VS Code/Codespaces/code-server
-- **LiteLLM** — local provider-neutral gateway, retry layer, and NVIDIA → OpenRouter failover controller
-- **NVIDIA Nemotron** — primary remote reasoning/coding route
-- **OpenRouter** — alternate model/provider route and fallback
-- **Google Cloud** — secondary persistent VM environment, deployment, integration testing, and production-like workloads when needed
-- **No local GPU required** — the local device only needs a modern browser
+## Product model
 
-## Target Architecture
+```text
+                         ┌──────────────────────────────┐
+                         │       🍍 ANANAS CORE        │
+                         │                              │
+                         │ Chat • Projects • Files      │
+                         │ Artifacts • Tools • Skills   │
+                         │ Execution • API • Telemetry  │
+                         │ Context • Model Routing      │
+                         └──────────────┬───────────────┘
+                                        │
+                         vertical packs / policies / APIs
+                                        │
+                 ┌──────────────────────┼──────────────────────┐
+                 ▼                      ▼                      ▼
+           DIRT RCM                Continuara          Future Verticals
+      Revenue-cycle AI         Care/health product       Other niches
+```
+
+## Delivery state
+
+Ananas uses explicit gates so infrastructure, experiments, prototypes, MVP code, and beta releases are not confused.
+
+| Gate | Current state |
+|---|---|
+| **Scope** | Defined |
+| **Proof of Concept** | Active / partial |
+| **Prototype** | Editable visual prototype built; interaction/usability validation still required |
+| **MVP** | Not yet achieved; implementation backlog active |
+| **Pilot / Beta** | Not started |
+
+Canonical status: [`docs/STATUS.md`](docs/STATUS.md)  
+Canonical boundaries: [`docs/SCOPE.md`](docs/SCOPE.md)  
+Stage gates: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)  
+Canonical phase sequence: [`docs/ROADMAP.md`](docs/ROADMAP.md)
+
+## Phase-1 MVP contract
+
+The MVP proves the reusable core before any vertical is allowed to redefine it.
+
+- Multi-turn conversational chat
+- Persistent project/workspace context
+- Project files and grounded retrieval
+- Persistent editable artifacts: documents, code, tables, schemas, charts/structured data
+- Governed tool and skill invocation with execution traces
+- Sandboxed code/data execution
+- Provider-neutral inference routing through LiteLLM
+- NVIDIA route as primary default; OpenRouter as alternate/fallback
+- API/headless access for downstream products
+- Citations and source lineage where evidence is used
+- Token, latency, reliability, retry/fallback, and cost telemetry
+- Project/tenant isolation primitives
+- Configuration-driven vertical packs and policy boundaries
+
+The initial MVP is intentionally free; payment/subscription infrastructure is explicitly deferred rather than forced into the MVP.
+
+See [`docs/MVP.md`](docs/MVP.md) for the functional acceptance gates.
+
+### Context strategy
+
+Ananas does **not** hard-code a claim that the platform itself is a native 1-million-token model. Context capacity is supplied by the selected provider/model. Practical working context is extended with project state, retrieval, summarization, files, and persistent artifacts while preserving the ability to route to larger-context models when justified.
+
+## First vertical — DIRT RCM
+
+**DIRT — Data Intelligence for Revenue Transformation** is the first hyper-specialized Ananas product for healthcare Revenue Cycle Management.
+
+DIRT is an **audit and operational intelligence layer**, not a replacement EMR, PM system, or clearinghouse.
+
+Initial DIRT boundary:
+
+- No-PHI audit data contract and ingress boundary
+- AR and denial leakage signals
+- EDI and administrative-friction detection
+- Human-reviewer queue prioritized by revenue impact and recovery probability
+- Evidence-backed SOP/action recommendations
+- Reviewer disposition and auditable outcome history
+- Backend-ready tenant boundaries and structured APIs
+- No automatic live claim submission in the MVP
+
+See [`docs/DIRT_VERTICAL.md`](docs/DIRT_VERTICAL.md).
+
+## Editable product design
+
+Canonical active Figma file:
+
+**[🍍 Ananas — MVP Product & DIRT Vertical](https://www.figma.com/design/mgVWhNifpTEdqdv9E487PQ)**
+
+It contains editable frames for:
+
+1. Product Architecture
+2. Ananas Chat MVP
+3. DIRT Reviewer Queue
+4. DIRT No-PHI Data Contract
+5. Delivery Lifecycle & Scope
+
+The older Product System & UX Figma file remains a legacy brand/motion reference, not the active product definition. See [`design/FIGMA.md`](design/FIGMA.md).
+
+## Reuse before rebuild
+
+Ananas keeps the core lean. Five upstream repositories are pinned and consumed through explicit policies rather than copied wholesale.
+
+| Repository | Tier | Policy |
+|---|---:|---|
+| `NVIDIA/skills` | 1 | `curated-install` |
+| `vercel-labs/skills` | 1 | `dependency` |
+| `microsoft/skills` | 1 | `curated-install` |
+| `modelcontextprotocol/servers` | 1 | `reference-and-pin` |
+| `NVIDIA/NeMo-Agent-Toolkit` | 2 | `evaluate-before-adoption` |
+
+Canonical pins: [`config/upstreams.yaml`](config/upstreams.yaml)  
+Governance: [`docs/UPSTREAMS.md`](docs/UPSTREAMS.md)
+
+Validate and fetch the exact reviewed revisions into a Git-ignored local cache:
+
+```bash
+bash scripts/upstreams/validate-registry.sh
+bash scripts/upstreams/fetch-pinned.sh
+```
+
+Fetched source lives under `.ananas/upstreams/` and is **not** vendored into Ananas. Tier-2 NeMo Agent Toolkit remains outside core until its benchmark gate passes.
+
+## Cloud-native development runtime
+
+The existing development foundation remains a core advantage; it is the **engineering/runtime substrate**, not the product definition.
 
 ```text
 Browser / basic laptop
@@ -26,7 +141,7 @@ Browser / basic laptop
         │                                             │
         ▼                                             ▼
 GitHub Codespaces                            Google Compute Engine
-PRIMARY WORKSPACE                            SECONDARY / PERSISTENT
+PRIMARY DEVELOPMENT                          OPTIONAL PERSISTENT RUNTIME
 VS Code + Continue                           code-server + Continue
         │                                             │
         └──────────────────┬──────────────────────────┘
@@ -35,147 +150,89 @@ VS Code + Continue                           code-server + Continue
                            │
                   ┌────────┴────────┐
                   ▼                 ▼
-           NVIDIA Nemotron     OpenRouter
-              primary           fallback
+           NVIDIA route        OpenRouter
+              primary          alternate/fallback
 
-GitHub repository = permanent source of truth
+GitHub repository = durable source of truth
 ```
 
-## Design Principles
+### Operating principles
 
-1. **Codespaces first** — consume the included GitHub development environment before spending cloud infrastructure credits.
-2. **Cloud-native** — development can happen from any browser-capable device.
-3. **Compute-decoupled** — AI inference does not depend on the Codespace, GCP VM, or local hardware having a GPU.
-4. **Cost-aware** — use included/free development capacity first; consume GCP only when persistence, deployment, or production-like infrastructure adds value.
-5. **Provider-portable** — route models through configuration rather than binding the project to a single inference provider.
-6. **Secure by default** — secrets belong in Codespaces secrets or local protected environment files, never in Git.
-7. **Automation-first** — setup, validation, testing, and deployment should be reproducible.
-8. **GitHub-anchored** — architecture, configuration, code, documentation, and operational decisions remain version controlled.
+1. **GitHub anchored** — source, architecture, product specs, benchmarks, and decisions remain version controlled.
+2. **Codespaces first** — use included development capacity before consuming cloud credits.
+3. **Compute decoupled** — the workspace does not need a local GPU.
+4. **Provider portable** — provider choices are configuration, not application architecture.
+5. **Cost audited** — latency, token burn, reliability, and successful tasks per dollar are measured.
+6. **Secure by default** — secrets never enter Git; privileged tools use least privilege and explicit boundaries.
+7. **Reuse before rebuild** — curated skills, MCP references, and dependencies are checked before net-new frameworks are written.
+8. **Verticals without forks** — DIRT/Continuara add policies, skills, schemas, connectors, evals, and UI modules to the shared core.
 
-## Repository Layout
+## Development quick start
 
-```text
--Ananas/
-├── .devcontainer/       # GitHub Codespaces / Dev Container configuration
-├── .github/             # GitHub automation and repository guidance
-├── benchmarks/          # Reproducible coding-model/agent evaluations
-├── config/              # Safe configuration templates (no secrets)
-├── docs/                # Architecture, setup, roadmap, and cost strategy
-├── scripts/             # Codespaces bootstrap + production GCP VM bootstrap
-├── src/                 # Application/source code
-├── tests/               # Automated product tests
-├── .editorconfig
-├── .env.example
-├── .gitignore
-├── CONTRIBUTING.md
-├── LICENSE
-├── SECURITY.md
-└── README.md
+### GitHub Codespaces — default
+
+Create a Codespace from `main`, configure provider credentials as Codespaces secrets/environment variables, then run:
+
+```bash
+bash scripts/healthcheck.sh
 ```
 
-## Quick Start
-
-### Path A — GitHub Codespaces (recommended default)
-
-From this repository, select **Code → Codespaces → Create codespace on main**.
-
-The included Dev Container configuration initializes the baseline development environment automatically.
-
-Configure these as **Codespaces secrets** or shell environment variables — never commit real keys:
+Provider secrets currently include:
 
 ```text
 NVIDIA_API_KEY
 OPENROUTER_API_KEY
 ```
 
-Then validate the Codespace:
+### Google Compute Engine — persistent/production-like work
 
-```bash
-bash scripts/healthcheck.sh
-```
-
-The Codespace bootstrap copies the safe repository Continue template to `~/.continue/config.yaml` when no local Continue config exists.
-
-### Path B — Google Compute Engine persistent workspace
-
-Use this only when you need a persistent VM, production-like Linux services, deployment testing, or a workspace independent of Codespaces runtime limits.
-
-On an Ubuntu 22.04+ GCE VM, clone this repository and run:
+On an Ubuntu 22.04+ VM:
 
 ```bash
 bash scripts/ananas-gcp-bootstrap.sh
 ```
 
-The script:
+Keep code-server and LiteLLM localhost-bound and use SSH/IAP tunneling rather than exposing the IDE/gateway directly to the public internet.
 
-- installs Node.js, Python tooling, code-server, Continue, and LiteLLM;
-- binds code-server to `127.0.0.1:8080` only;
-- binds the AI gateway to `127.0.0.1:4000` only;
-- configures NVIDIA Nemotron as the primary route;
-- configures OpenRouter as automatic fallback when both API keys are supplied;
-- writes provider credentials only to protected local files;
-- creates a systemd-managed gateway;
-- creates a one-command `ananas-healthcheck` inference test.
+See [`docs/SETUP.md`](docs/SETUP.md) and [`SECURITY.md`](SECURITY.md).
 
-Use an SSH/IAP tunnel instead of opening the IDE to the public internet:
-
-```bash
-gcloud compute ssh YOUR_VM_NAME --zone=YOUR_ZONE -- -L 8080:127.0.0.1:8080
-```
-
-Then browse locally to:
+## Repository map
 
 ```text
-http://127.0.0.1:8080
+-Ananas/
+├── app/                  # chat-first web/product shell
+├── components/           # reusable UI components
+├── .devcontainer/        # Codespaces configuration
+├── .github/              # repository automation/governance
+├── benchmarks/           # model, agent, and adoption evaluations
+├── config/               # safe configuration + upstream registry
+├── design/               # Figma/design source links and manifests
+├── docs/                 # scope, lifecycle, product, architecture, verticals, roadmap
+├── scripts/              # bootstrap, health, upstream, automation
+├── src/                  # core application/runtime source
+├── tests/                # product/runtime tests
+├── AGENTS.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+└── README.md
 ```
 
-## Model Evaluation
+## Key documents
 
-Ananas does not promote a model based on marketing claims alone. The repository contains a reproducible brownfield coding benchmark:
-
-- [`benchmarks/nemotron-vs-frontier.md`](benchmarks/nemotron-vs-frontier.md) — concurrency, idempotency, retry, testing, autonomy, latency, and cost evaluation
-- [`benchmarks/README.md`](benchmarks/README.md) — benchmark workspace guidance
-
-The default adoption gate is to keep Nemotron as the primary backbone only when it maintains at least **90% of the frontier baseline correctness score** while materially improving inference economics, or wins on successful tasks per dollar.
-
-## Initial Development Stack
-
-| Layer | Default |
-|---|---|
-| Primary workspace | GitHub Codespaces |
-| Persistent workspace | Google Compute Engine |
-| Editor | VS Code / code-server |
-| AI coding interface | Continue |
-| Local routing layer | LiteLLM |
-| Primary inference route | NVIDIA Nemotron |
-| Alternate route | OpenRouter |
-| Runtime | Node.js + Python 3 |
-| Cloud deployment | Google Cloud |
-| Source control | GitHub |
-| Secrets | Codespaces secrets / protected environment files |
-
-## Security
-
-- Never commit API keys, service-account JSON files, `.env` files, credentials, tokens, or cloud secrets.
-- Treat public-repository history as permanent.
-- Use least-privilege credentials for GitHub and Google Cloud integrations.
-- Keep provider endpoints and model names configurable rather than embedded throughout application source code.
-- Keep code-server and LiteLLM localhost-bound; use SSH/IAP tunneling for remote access.
-
-See [`SECURITY.md`](SECURITY.md).
-
-## Status
-
-**Phase 1 — Dual-runtime foundation**
-
-The repository now supports both the low-cost Codespaces-first development path and a hardened GCP VM path. The next phases introduce live provider validation, executable benchmark fixtures, autonomous coding workflows, telemetry/cost controls, and Google Cloud deployment targets.
-
+- Current status: [`docs/STATUS.md`](docs/STATUS.md)
+- Scope: [`docs/SCOPE.md`](docs/SCOPE.md)
+- Delivery lifecycle: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)
+- MVP: [`docs/MVP.md`](docs/MVP.md)
+- Product: [`docs/PRODUCT.md`](docs/PRODUCT.md)
 - Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-- Setup: [`docs/SETUP.md`](docs/SETUP.md)
-- Cost strategy: [`docs/COST_STRATEGY.md`](docs/COST_STRATEGY.md)
+- DIRT vertical: [`docs/DIRT_VERTICAL.md`](docs/DIRT_VERTICAL.md)
+- Upstream policy: [`docs/UPSTREAMS.md`](docs/UPSTREAMS.md)
+- GitHub Projects model: [`docs/PROJECTS.md`](docs/PROJECTS.md)
 - Roadmap: [`docs/ROADMAP.md`](docs/ROADMAP.md)
-- GCP bootstrap: [`scripts/ananas-gcp-bootstrap.sh`](scripts/ananas-gcp-bootstrap.sh)
-- Model benchmark: [`benchmarks/nemotron-vs-frontier.md`](benchmarks/nemotron-vs-frontier.md)
+- Cost strategy: [`docs/COST_STRATEGY.md`](docs/COST_STRATEGY.md)
+- Setup: [`docs/SETUP.md`](docs/SETUP.md)
+- Security: [`SECURITY.md`](SECURITY.md)
+- Figma: [`design/FIGMA.md`](design/FIGMA.md)
 
 ## License
 

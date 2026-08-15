@@ -1,0 +1,67 @@
+# Canonical Ananas upstream registry
+# Update pins deliberately after license/security review and benchmark validation.
+# `security_review` describes Ananas review state, not an upstream security guarantee.
+version: 2
+updated_at: 2026-08-15
+
+upstreams:
+  - repository: NVIDIA/skills
+    tier: 1
+    role: agent-skills
+    policy: curated-install
+    ref: main
+    pin: a9130c6036de4603499924a3f2687cb6c42101ca
+    vendor: false
+    provenance: official-nvidia-github
+    license_spdx: Apache-2.0
+    license_review: metadata-verified
+    security_review: source-fetch-approved-execution-review-required
+
+  - repository: vercel-labs/skills
+    tier: 1
+    role: skill-distribution
+    policy: dependency
+    ref: main
+    pin: c6f69c631292444cc541ac6d91e2226b0ff247da
+    vendor: false
+    provenance: official-vercel-labs-github
+    license_spdx: MIT
+    license_review: metadata-verified
+    security_review: source-fetch-approved-execution-review-required
+
+  - repository: microsoft/skills
+    tier: 1
+    role: agent-skills-and-mcp
+    policy: curated-install
+    ref: main
+    pin: e20084b9d230c6f3b46ce36f011e6c3e50f79f8a
+    vendor: false
+    provenance: official-microsoft-github
+    license_spdx: MIT
+    license_review: metadata-verified
+    security_review: source-fetch-approved-execution-review-required
+
+  - repository: modelcontextprotocol/servers
+    tier: 1
+    role: official-mcp-reference-servers
+    policy: reference-and-pin
+    ref: main
+    pin: 76d64c822f5125032f89eb71dbdb94e42b434821
+    vendor: false
+    provenance: official-modelcontextprotocol-github
+    license_spdx: NOASSERTION
+    license_review: repository-metadata-no-spdx-review-required-before-code-adoption
+    security_review: reference-source-only-execution-review-required
+
+  - repository: NVIDIA/NeMo-Agent-Toolkit
+    tier: 2
+    role: multi-agent-framework
+    policy: evaluate-before-adoption
+    ref: develop
+    pin: a35d30cdaf2327e93cb9b47e0ddb447e1d64f523
+    vendor: false
+    provenance: official-nvidia-github
+    license_spdx: Apache-2.0
+    license_review: metadata-verified
+    security_review: evaluation-source-only-not-approved-core-dependency
+    adoption_gate: benchmark-required
