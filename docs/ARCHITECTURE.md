@@ -8,6 +8,8 @@ The existing Codespaces/GCP/Continue/LiteLLM foundation remains the engineering 
 
 GitHub is the durable control plane. Development environments may be disposable; source, configuration, product contracts, documentation, benchmarks, upstream pins, and automation remain version controlled.
 
+Phase-1 boundaries are controlled by [`SCOPE.md`](SCOPE.md). Delivery-stage evidence is controlled by [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md).
+
 ## 2. Product Architecture
 
 ```text
@@ -167,7 +169,7 @@ Exposes reusable core capabilities to the Ananas UI and vertical products such a
 
 ## 7. DIRT RCM Boundary
 
-DIRT is implemented above Ananas core:
+DIRT is implemented above Ananas Core:
 
 ```text
 DIRT UI / RCM Workflow
@@ -182,7 +184,9 @@ DIRT UI / RCM Workflow
 Ananas Core API / Tool / Artifact / Model Services
 ```
 
-DIRT's initial intelligence payload excludes direct patient identifiers and free-text clinical material. The exact schema is defined in [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md). Formal privacy/security review remains required before asserting that a production dataset satisfies a legal de-identification standard.
+DIRT's initial No-PHI intelligence payload excludes direct patient identifiers and identifiable free-text clinical material. The exact schema is defined in [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md). Formal privacy/security review remains required before asserting that a production dataset satisfies a legal de-identification standard.
+
+DIRT's design/data contract may progress in parallel, but DIRT is not treated as a completed or production MVP until the shared Ananas Core contracts it relies on are implemented and the DIRT-specific acceptance evidence exists.
 
 ## 8. Security Model
 
@@ -194,7 +198,7 @@ DIRT's initial intelligence payload excludes direct patient identifiers and free
 6. Tools/skills receive least privilege and provenance/version metadata.
 7. Sandboxed execution is separated from privileged operational actions.
 8. Sensitive/irreversible actions require explicit policy and approval gates.
-9. DIRT ingestion enforces its privacy contract before model processing, with reject/quarantine behavior for payloads that violate it.
+9. DIRT ingestion enforces its privacy contract before No-PHI model processing, with reject/quarantine behavior for payloads that violate it.
 10. GCP identity should prefer workload identity/OIDC over long-lived keys as the platform matures.
 
 ## 9. Cost Model
@@ -217,23 +221,40 @@ Canonical upstream policy and pins live in:
 
 Four Tier-1 repositories are reused through curated installs, dependencies, or pinned references. `NVIDIA/NeMo-Agent-Toolkit` is Tier 2 and remains outside core until benchmarked.
 
+Reviewed source can be obtained reproducibly without vendoring it:
+
+```bash
+bash scripts/upstreams/validate-registry.sh
+bash scripts/upstreams/fetch-pinned.sh
+```
+
+The fetched cache lives under `.ananas/upstreams/` and is excluded from Git history.
+
 ## 11. Current Evolution
 
 Foundation already available:
 
 - Codespaces-first development;
 - hardened persistent GCP path;
-- NVIDIA/OpenRouter routing;
-- LiteLLM failover/provider abstraction;
-- web application surface;
-- model benchmark criteria.
+- NVIDIA/OpenRouter routing design;
+- LiteLLM provider abstraction;
+- chat-first web application shell;
+- model benchmark criteria;
+- governed 5-repository upstream registry + pinned fetch workflow;
+- editable Core/DIRT Figma prototypes.
 
-Current product milestone:
+**Current build milestone:** Phase-1 Ananas conversational MVP.
 
-- Phase-1 Ananas conversational MVP;
-- persistent projects/files/artifacts;
-- unified tool/skill runtime;
-- API and telemetry;
-- DIRT vertical adapter and No-PHI ingress contract.
+Current implementation priorities:
 
-See [`MVP.md`](MVP.md), [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md), and [`ROADMAP.md`](ROADMAP.md).
+- real session/project persistence and isolation;
+- file-grounded context + source lineage;
+- artifact persistence/revisions;
+- governed tool/skill runtime;
+- sandbox execution;
+- provider route/failover PoC evidence;
+- shared API and telemetry.
+
+**Next vertical milestone after shared-core acceptance:** DIRT implementation against the defined No-PHI/reviewer contracts while reusing existing RCM data assets behind a DIRT adapter.
+
+See [`SCOPE.md`](SCOPE.md), [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md), [`MVP.md`](MVP.md), [`DIRT_VERTICAL.md`](DIRT_VERTICAL.md), and [`ROADMAP.md`](ROADMAP.md).
