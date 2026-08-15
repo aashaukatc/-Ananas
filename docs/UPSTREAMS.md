@@ -4,21 +4,34 @@ Ananas is intentionally built around **composition rather than wholesale vendori
 
 ## Canonical registry
 
-Machine-readable policy and exact reviewed pins live in [`config/upstreams.yaml`](../config/upstreams.yaml).
+There is **one canonical machine-readable upstream registry**: [`config/upstreams.yaml`](../config/upstreams.yaml). Do not create a second `upstream/registry.yaml`, spreadsheet, manifest, or prose inventory that competes with it.
 
-| Repository | Tier | Role | Policy |
-|---|---:|---|---|
-| `NVIDIA/skills` | 1 | Agent Skills | `curated-install` |
-| `vercel-labs/skills` | 1 | Skill distribution | `dependency` |
-| `microsoft/skills` | 1 | Agent Skills + MCP | `curated-install` |
-| `modelcontextprotocol/servers` | 1 | Official MCP reference servers | `reference-and-pin` |
-| `NVIDIA/NeMo-Agent-Toolkit` | 2 | Multi-agent framework | `evaluate-before-adoption` |
+The registry now records for each upstream:
+
+- repository and role;
+- Tier and Ananas integration policy;
+- reviewed ref + exact 40-character pin;
+- `vendor: false` policy;
+- provenance;
+- repository-level SPDX/license metadata and Ananas license-review state;
+- Ananas security-review/adoption state;
+- benchmark gate where required.
+
+| Repository | Tier | Policy | Repository license metadata | Ananas review state |
+|---|---:|---|---|---|
+| `NVIDIA/skills` | 1 | `curated-install` | Apache-2.0 | source fetch approved; selected execution still requires review |
+| `vercel-labs/skills` | 1 | `dependency` | MIT | source fetch approved; dependency/use review still required |
+| `microsoft/skills` | 1 | `curated-install` | MIT | source fetch approved; selected execution still requires review |
+| `modelcontextprotocol/servers` | 1 | `reference-and-pin` | GitHub repository metadata reports `NOASSERTION` | reference source only until component/license review |
+| `NVIDIA/NeMo-Agent-Toolkit` | 2 | `evaluate-before-adoption` | Apache-2.0 | evaluation source only; not approved as Core dependency |
+
+Repository-level license metadata is an inventory signal, not proof that every nested skill, package, sample, asset, or transitive dependency carries the same terms. Component-level promotion still requires review.
 
 **Canonical count: 4 Tier-1 + 1 Tier-2 = 5 upstream repositories.**
 
 ## Getting the reviewed upstream source
 
-The repository now has a reproducible, non-vendoring fetch path:
+The repository has a reproducible, non-vendoring fetch path:
 
 ```bash
 bash scripts/upstreams/validate-registry.sh
@@ -42,11 +55,11 @@ Tier 1 does **not** mean clone, fork, or copy the entire repository into Ananas.
 Allowed integration patterns:
 
 - fetch the reviewed source into the local upstream cache;
-- install selected skills;
-- depend on released packages where appropriate;
+- install selected reviewed skills;
+- depend on reviewed released packages where appropriate;
 - adapt reference implementations behind Ananas-owned interfaces;
 - pin reviewed commit/version identifiers;
-- maintain provenance and license metadata;
+- maintain provenance, license, and permission metadata;
 - update deliberately through reviewable pull requests;
 - contribute generally useful fixes upstream rather than carrying avoidable forks.
 
@@ -55,12 +68,12 @@ Avoid:
 - subtree copies with no update path;
 - unreviewed scripts running with broad credentials;
 - duplicating upstream source only to make minor local changes;
-- binding Ananas core contracts to one vendor's internal API;
+- binding Ananas Core contracts to one vendor's internal API;
 - executing fetched upstream code merely because it is present in `.ananas/upstreams/`.
 
 ## Tier 2 rule
 
-`NVIDIA/NeMo-Agent-Toolkit` remains outside the Ananas core until a benchmark demonstrates a material advantage over the existing lightweight orchestration path.
+`NVIDIA/NeMo-Agent-Toolkit` remains outside Ananas Core until a benchmark demonstrates a material advantage over the existing lightweight orchestration path.
 
 Adoption requires evidence for at least:
 
@@ -83,6 +96,7 @@ Before writing a new Ananas subsystem, use this order:
 Need identified
   → search existing Ananas capability
   → check Tier-1 upstreams / MCP references
+  → inspect exact reviewed pin from .ananas/upstreams/
   → evaluate a released package or selected skill
   → wrap behind an Ananas-owned adapter
   → build net-new code only for the remaining gap
@@ -94,14 +108,15 @@ This is the practical anti-reinvention rule.
 
 Before promoting or updating an upstream component:
 
-1. Review its current license and transitive dependencies.
+1. Review repository and component-level license terms plus transitive dependencies.
 2. Review the exact pinned diff from the previously approved version.
 3. Run relevant tests/benchmarks.
-4. Scan credential, network, filesystem, subprocess, and code-execution behavior.
+4. Inspect credential, network, filesystem, subprocess, and code-execution behavior.
 5. Restrict permissions to the minimum required by the selected skill/tool.
-6. Record the approved pin in `config/upstreams.yaml`.
+6. Update the approved pin and review metadata in `config/upstreams.yaml`.
 7. Prefer an adapter boundary so a component can be removed without rewriting product logic.
 8. Keep the fetched source cache outside Git history.
+9. Treat `security_review` as Ananas adoption state, never as a claim that upstream software is vulnerability-free.
 
 ## Current pins — 2026-08-15
 
