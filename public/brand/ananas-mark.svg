@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Ananas pineapple bot mark</title>
+  <desc id="desc">A geometric pineapple outline with green crown, gold wireframe body, and lime robotic visor.</desc>
+  <rect width="64" height="64" rx="14" fill="#0B1511"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 19 15 7m13 11-1-13m9 13 6-12m-1 16 10-8" stroke="#48D17A" stroke-width="3"/>
+    <path d="M17 26c0-7 6-11 15-11s15 4 15 11v14c0 10-6 17-15 17S17 50 17 40V26Z" stroke="#FFC857" stroke-width="2.5"/>
+    <path d="m21 30 22 18M20 42l17 14M43 30 21 19M44 41 29 56" stroke="#FFC857" stroke-width="1.5" opacity=".45"/>
+    <rect x="20" y="31" width="24" height="8" rx="3" stroke="#C8FF3D" stroke-width="2.5"/>
+    <path d="M29 35h6" stroke="#C8FF3D" stroke-width="2"/>
+  </g>
+</svg>
