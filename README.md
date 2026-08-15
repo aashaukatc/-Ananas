@@ -2,13 +2,13 @@
 
 **A cloud-native, provider-portable conversational work engine that starts general-purpose and specializes into high-value vertical products.**
 
-Ananas is a home-grown assistant platform with a familiar ChatGPT/Claude-style interaction model: conversation, files, projects, tools, skills, executable work, and persistent artifacts in one workspace. It is deliberately not tied to one industry or one model provider.
+Ananas is a home-grown assistant platform with a familiar modern conversational interaction model: conversation, files, projects, tools, skills, executable work, and persistent artifacts in one workspace. It is deliberately not tied to one industry or one model provider.
 
-**Phase 1** builds the reusable general-purpose core. **DIRT RCM** is the first specialized vertical powered by that core, followed by products such as **Continuara** and other domain-specific applications.
+**Ananas Core** is the reusable platform. **DIRT RCM** is the first specialized vertical powered by that core. **Continuara** and future verticals reuse the same contracts rather than forking the platform.
 
-> Build the intelligence, tooling, artifact, routing, and execution substrate once. Specialize through domain packs instead of forking the platform.
+> Build the conversation, context, artifact, tool, routing, execution, and telemetry substrate once. Specialize through vertical packs.
 
-## Product Model
+## Product model
 
 ```text
                          ┌──────────────────────────────┐
@@ -17,75 +17,97 @@ Ananas is a home-grown assistant platform with a familiar ChatGPT/Claude-style i
                          │ Chat • Projects • Files      │
                          │ Artifacts • Tools • Skills   │
                          │ Execution • API • Telemetry  │
-                         │ Memory/Context • Model Route │
+                         │ Context • Model Routing      │
                          └──────────────┬───────────────┘
                                         │
-                         Domain packs / policies / APIs
+                         vertical packs / policies / APIs
                                         │
                  ┌──────────────────────┼──────────────────────┐
                  ▼                      ▼                      ▼
            DIRT RCM                Continuara          Future Verticals
-      Revenue-cycle AI         Care/health product      Other niches
+      Revenue-cycle AI         Care/health product       Other niches
 ```
 
-## Phase 1 — Ananas MVP
+## Delivery state
 
-The MVP proves the core before industry specialization.
+Ananas uses explicit gates so infrastructure, experiments, prototypes, MVP code, and beta releases are not confused.
+
+| Gate | Current state |
+|---|---|
+| **Scope** | Defined |
+| **Proof of Concept** | Active / partial |
+| **Prototype** | Editable visual prototype built; interaction/usability validation still required |
+| **MVP** | Not yet achieved; implementation backlog active |
+| **Pilot / Beta** | Not started |
+
+Canonical boundaries: [`docs/SCOPE.md`](docs/SCOPE.md)  
+Stage gates: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)  
+Canonical phase sequence: [`docs/ROADMAP.md`](docs/ROADMAP.md)
+
+## Phase-1 MVP contract
+
+The MVP proves the reusable core before any vertical is allowed to redefine it.
 
 - Multi-turn conversational chat
-- Project/workspace context and file attachments
-- Persistent artifacts beside chat: documents, code, tables, schemas, charts
-- Tool and skill invocation with concise execution status
+- Persistent project/workspace context
+- Project files and grounded retrieval
+- Persistent editable artifacts: documents, code, tables, schemas, charts/structured data
+- Governed tool and skill invocation with execution traces
 - Sandboxed code/data execution
 - Provider-neutral inference routing through LiteLLM
-- NVIDIA route as the primary default; OpenRouter as alternate/fallback
+- NVIDIA route as primary default; OpenRouter as alternate/fallback
 - API/headless access for downstream products
 - Citations and source lineage where evidence is used
-- Token, latency, reliability, and cost telemetry
+- Token, latency, reliability, retry/fallback, and cost telemetry
+- Project/tenant isolation primitives
 - Configuration-driven vertical packs and policy boundaries
 
-See [`docs/MVP.md`](docs/MVP.md) for the acceptance gates and explicit non-goals.
+The initial MVP is intentionally free; payment/subscription infrastructure is explicitly deferred rather than forced into the MVP.
+
+See [`docs/MVP.md`](docs/MVP.md) for the functional acceptance gates.
 
 ### Context strategy
 
-Ananas does **not** hard-code a claim that the platform itself is a native 1-million-token model. Context capacity is supplied by the selected provider/model. Ananas extends practical working context with project state, retrieval, summarization, files, and persistent artifacts while remaining free to route to larger-context models when justified.
+Ananas does **not** hard-code a claim that the platform itself is a native 1-million-token model. Context capacity is supplied by the selected provider/model. Practical working context is extended with project state, retrieval, summarization, files, and persistent artifacts while preserving the ability to route to larger-context models when justified.
 
-## First Vertical — DIRT RCM
+## First vertical — DIRT RCM
 
 **DIRT — Data Intelligence for Revenue Transformation** is the first hyper-specialized Ananas product for healthcare Revenue Cycle Management.
 
 DIRT is an **audit and operational intelligence layer**, not a replacement EMR, PM system, or clearinghouse.
 
-Initial vertical capabilities:
+Initial DIRT boundary:
 
-- No-PHI audit data contract and intake boundary
+- No-PHI audit data contract and ingress boundary
 - AR and denial leakage signals
 - EDI and administrative-friction detection
 - Human-reviewer queue prioritized by revenue impact and recovery probability
 - Evidence-backed SOP/action recommendations
-- Reviewer disposition and immutable audit history
+- Reviewer disposition and auditable outcome history
 - Backend-ready tenant boundaries and structured APIs
+- No automatic live claim submission in the MVP
 
 See [`docs/DIRT_VERTICAL.md`](docs/DIRT_VERTICAL.md).
 
-## Editable Product Design
+## Editable product design
 
-Canonical Figma file:
+Canonical active Figma file:
 
 **[🍍 Ananas — MVP Product & DIRT Vertical](https://www.figma.com/design/mgVWhNifpTEdqdv9E487PQ)**
 
-It contains:
+It contains editable frames for:
 
-1. Product architecture — Ananas core → vertical products
-2. Phase-1 Ananas conversational workspace
-3. DIRT Human Reviewer Queue
-4. DIRT No-PHI data contract
+1. Product Architecture
+2. Ananas Chat MVP
+3. DIRT Reviewer Queue
+4. DIRT No-PHI Data Contract
+5. Delivery Lifecycle & Scope
 
-Design governance is documented in [`design/FIGMA.md`](design/FIGMA.md).
+The older Product System & UX Figma file remains a legacy brand/motion reference, not the active product definition. See [`design/FIGMA.md`](design/FIGMA.md).
 
-## Reuse Before Rebuild
+## Reuse before rebuild
 
-Ananas keeps the core lean. Upstream projects are pinned and consumed through explicit policies rather than copied wholesale.
+Ananas keeps the core lean. Five upstream repositories are pinned and consumed through explicit policies rather than copied wholesale.
 
 | Repository | Tier | Policy |
 |---|---:|---|
@@ -95,14 +117,21 @@ Ananas keeps the core lean. Upstream projects are pinned and consumed through ex
 | `modelcontextprotocol/servers` | 1 | `reference-and-pin` |
 | `NVIDIA/NeMo-Agent-Toolkit` | 2 | `evaluate-before-adoption` |
 
-Machine-readable pins: [`config/upstreams.yaml`](config/upstreams.yaml)  
+Canonical pins: [`config/upstreams.yaml`](config/upstreams.yaml)  
 Governance: [`docs/UPSTREAMS.md`](docs/UPSTREAMS.md)
 
-**Tier 1 does not mean fork or vendor everything.** Tier 2 remains outside core until benchmark evidence justifies adoption.
+Validate and fetch the exact reviewed revisions into a Git-ignored local cache:
 
-## Cloud-Native Development Runtime
+```bash
+bash scripts/upstreams/validate-registry.sh
+bash scripts/upstreams/fetch-pinned.sh
+```
 
-The existing development foundation remains a core advantage; it is now correctly treated as the **engineering/runtime substrate for the product**, not the product definition itself.
+Fetched source lives under `.ananas/upstreams/` and is **not** vendored into Ananas. Tier-2 NeMo Agent Toolkit remains outside core until its benchmark gate passes.
+
+## Cloud-native development runtime
+
+The existing development foundation remains a core advantage; it is the **engineering/runtime substrate**, not the product definition.
 
 ```text
 Browser / basic laptop
@@ -131,13 +160,13 @@ GitHub repository = durable source of truth
 1. **GitHub anchored** — source, architecture, product specs, benchmarks, and decisions remain version controlled.
 2. **Codespaces first** — use included development capacity before consuming cloud credits.
 3. **Compute decoupled** — the workspace does not need a local GPU.
-4. **Provider portable** — model/provider choices are configuration, not application architecture.
+4. **Provider portable** — provider choices are configuration, not application architecture.
 5. **Cost audited** — latency, token burn, reliability, and successful tasks per dollar are measured.
 6. **Secure by default** — secrets never enter Git; privileged tools use least privilege and explicit boundaries.
-7. **Reuse before rebuild** — curated skills, MCP reference patterns, and dependencies are preferred over duplicated frameworks.
+7. **Reuse before rebuild** — curated skills, MCP references, and dependencies are checked before net-new frameworks are written.
 8. **Verticals without forks** — DIRT/Continuara add policies, skills, schemas, connectors, evals, and UI modules to the shared core.
 
-## Development Quick Start
+## Development quick start
 
 ### GitHub Codespaces — default
 
@@ -166,19 +195,19 @@ Keep code-server and LiteLLM localhost-bound and use SSH/IAP tunneling rather th
 
 See [`docs/SETUP.md`](docs/SETUP.md) and [`SECURITY.md`](SECURITY.md).
 
-## Repository Map
+## Repository map
 
 ```text
 -Ananas/
-├── app/                  # Ananas web/product surface
+├── app/                  # chat-first web/product shell
 ├── components/           # reusable UI components
 ├── .devcontainer/        # Codespaces configuration
 ├── .github/              # repository automation/governance
 ├── benchmarks/           # model, agent, and adoption evaluations
 ├── config/               # safe configuration + upstream registry
-├── design/               # Figma/design source links and artifacts
-├── docs/                 # product, architecture, verticals, roadmap
-├── scripts/              # bootstrap, health, automation
+├── design/               # Figma/design source links and manifests
+├── docs/                 # scope, lifecycle, product, architecture, verticals, roadmap
+├── scripts/              # bootstrap, health, upstream, automation
 ├── src/                  # core application/runtime source
 ├── tests/                # product/runtime tests
 ├── AGENTS.md
@@ -187,32 +216,16 @@ See [`docs/SETUP.md`](docs/SETUP.md) and [`SECURITY.md`](SECURITY.md).
 └── README.md
 ```
 
-## Current Product Sequence
+## Key documents
 
-```text
-Foundation already built
-Codespaces + GCP + Continue + LiteLLM + provider routing
-                    │
-                    ▼
-Phase 1 — Ananas conversational MVP
-Chat + projects + files + artifacts + tools + API + telemetry
-                    │
-                    ▼
-Phase 2 — DIRT vertical pack
-No-PHI audit + RCM signals + reviewer queue + governed feedback
-                    │
-                    ▼
-Phase 3 — additional verticals
-Continuara + future specialized products
-```
-
-## Key Documents
-
+- Scope: [`docs/SCOPE.md`](docs/SCOPE.md)
+- Delivery lifecycle: [`docs/DELIVERY_LIFECYCLE.md`](docs/DELIVERY_LIFECYCLE.md)
 - MVP: [`docs/MVP.md`](docs/MVP.md)
 - Product: [`docs/PRODUCT.md`](docs/PRODUCT.md)
 - Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - DIRT vertical: [`docs/DIRT_VERTICAL.md`](docs/DIRT_VERTICAL.md)
 - Upstream policy: [`docs/UPSTREAMS.md`](docs/UPSTREAMS.md)
+- GitHub Projects model: [`docs/PROJECTS.md`](docs/PROJECTS.md)
 - Roadmap: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - Cost strategy: [`docs/COST_STRATEGY.md`](docs/COST_STRATEGY.md)
 - Setup: [`docs/SETUP.md`](docs/SETUP.md)
