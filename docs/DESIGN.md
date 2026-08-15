@@ -1,6 +1,13 @@
 # Ananas Design Hub
 
-GitHub remains the source of truth for product requirements and implementation. Figma and Canva are synchronized presentation/design surfaces.
+GitHub remains the source of truth for product requirements, tokens, motion rules and implementation. Figma and Canva are synchronized collaboration/presentation surfaces.
+
+## Repository archive
+- `design/README.md` — design archive rules and portable source.
+- `design/figma/manifest.json` — every Figma page/frame/node ID and dimensions.
+- `design/canva/manifest.json` — selected Canva folder/design IDs and canonical links.
+- `design/source/ananas-logo-concept.html` — standalone 3D logo reference.
+- `public/brand/ananas-mark.svg` — static portable fallback.
 
 ## Figma
 **Product System & UX**  
@@ -11,19 +18,20 @@ Pages:
 2. Product UI
 3. UX Wireframes
 4. Architecture & Collaboration
+5. Motion & 3D
 
 ## Canva
 **Ananas workspace folder**  
 https://www.canva.com/folder/FAHSUiWlSAc
 
-Selected assets:
-- Logo system: https://www.canva.com/d/3uqLB2pSd_Um3qu
-- Social/GitHub preview: https://www.canva.com/d/2hCDQqg5WhDu24-
+Selected collateral is indexed by stable Canva design ID in `design/canva/manifest.json`.
 
-## Source files
-- `docs/BRAND.md` — canonical colors, mark direction, typography and voice.
+## Canonical source files
+- `docs/BRAND.md` — palette, mark, typography, voice and UI principles.
+- `docs/MOTION.md` — Three.js geometry, animation, performance and accessibility.
 - `docs/PRODUCT.md` — product surfaces, UX flow, frontend/backend boundaries.
 - `app/` — executable product UI.
+- `components/ananas-logo-3d.tsx` — production animated mark.
 
 ## Drift rule
-When design and code disagree, GitHub documentation and production behavior win until the design files are deliberately resynchronized.
+When design and code disagree, repository documentation and production behavior win until the visual collaboration surfaces are deliberately resynchronized.
