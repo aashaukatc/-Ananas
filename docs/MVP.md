@@ -1,42 +1,65 @@
 # 🍍 Ananas MVP
 
+## Status
+
+**MVP is defined but not yet achieved.**
+
+Current delivery state:
+
+- Scope — defined
+- PoC — active / partial
+- Prototype — visual prototype built; interaction/usability validation pending
+- MVP — implementation/acceptance backlog active
+- Pilot/Beta — not started
+
+See [`SCOPE.md`](SCOPE.md) and [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md).
+
 ## Product definition
 
-Ananas is a standalone, cloud-native conversational work engine. Its interaction model is intentionally familiar to users of modern assistants such as ChatGPT and Claude, but Ananas is designed to become progressively more specialized around operational work, reusable skills, governed tools, structured artifacts, and domain-specific products.
+Ananas is a standalone, cloud-native conversational work engine. Its interaction model is intentionally familiar to users of modern assistants, but Ananas is designed around operational work, persistent projects, reusable skills, governed tools, structured artifacts, source lineage, cost-aware routing, and domain-specific vertical products.
 
 Ananas is **not** DIRT and is **not** limited to healthcare RCM. DIRT is the first vertical product powered by Ananas.
 
-## Phase 1 MVP thesis
+## Phase-1 MVP thesis
 
 Phase 1 proves that Ananas can operate as a useful home-grown general-purpose work assistant before vertical specialization.
 
 The MVP must support:
 
 1. Multi-turn conversational chat.
-2. File attachment and project context.
-3. Persistent project/workspace organization.
-4. Model routing through LiteLLM with NVIDIA as primary and OpenRouter as alternate/fallback.
-5. Tool and skill invocation with explicit execution traces.
-6. Artifact creation beside the conversation: documents, code, tables, schemas, charts, and structured outputs.
-7. Sandboxed code/script execution.
-8. API-first/headless access for downstream products.
-9. Citations/source lineage where external or attached evidence is used.
-10. Usage, latency, token, and cost telemetry.
-11. Provider portability and configuration-driven routing.
-12. Security boundaries that keep secrets out of Git and isolate tenant/project context.
+2. A real user/session identity path appropriate to the release audience.
+3. File attachment/indexing and project-grounded context.
+4. Persistent project/workspace organization and isolation.
+5. Model routing through LiteLLM with NVIDIA as primary and OpenRouter as alternate/fallback.
+6. Tool and skill invocation with explicit provenance, permission boundary, and execution trace.
+7. Persistent artifact creation/editing beside conversation: documents, code, tables, schemas, charts, and structured outputs.
+8. Basic artifact revision/reopen behavior.
+9. Sandboxed code/script/data execution.
+10. API-first/headless access to the same core capabilities.
+11. Citations/source lineage where attached or external evidence is used.
+12. Usage, latency, token, retry/fallback, cost, and task-outcome telemetry.
+13. Provider portability and configuration-driven routing.
+14. Security boundaries that keep secrets out of Git/UI and isolate project/tenant context.
+15. A vertical-pack installation/integration path that does not require forking core runtime architecture.
 
-## Phase 1 non-goals
+## Phase-1 non-goals
 
 The MVP does not need to:
 
 - train a foundation model from scratch;
 - match every feature of commercial general-purpose assistants;
 - run a native 1-million-token model itself;
+- ship native mobile applications;
+- support Google/Apple/social authentication;
+- include billing/subscription/payment infrastructure in the initial free MVP;
+- create a public plugin/skill marketplace;
 - become an EMR, clearinghouse, billing system, or clinical record system;
+- accept PHI inside Ananas Core;
 - execute irreversible healthcare transactions without domain-specific approval controls;
-- vendor or fork large upstream frameworks without demonstrated need.
+- vendor or fork large upstream frameworks without demonstrated need;
+- adopt NVIDIA NeMo Agent Toolkit as core merely because it is available.
 
-Large-context capability is a **routing capability**, not a hard-coded model-size promise. The system should expose the largest reliable context supported by the selected provider/model while using retrieval, project memory, summarization, and artifact persistence to extend practical working context.
+Large-context capability is a **routing + context-management capability**, not a hard-coded model-size promise. The system should use the reliable context supported by the selected provider/model while extending practical working context with retrieval, project memory, summarization, files, and artifact persistence.
 
 ## Core interaction model
 
@@ -61,7 +84,7 @@ LiteLLM → NVIDIA primary → OpenRouter alternate/fallback
 
 ## Verticalization model
 
-A vertical product should inherit the Ananas core and add only what is domain-specific:
+A vertical product inherits Ananas Core and adds only what is domain-specific:
 
 - domain skills;
 - policy/guardrail packs;
@@ -82,20 +105,44 @@ Ananas Core
    └── Future verticals
 ```
 
+## PoC prerequisites to retire before MVP release candidate
+
+The MVP should not hide unresolved architecture risk behind UI mocks. At minimum, the PoCs in [`DELIVERY_LIFECYCLE.md`](DELIVERY_LIFECYCLE.md) must demonstrate:
+
+- real provider routing/fallback;
+- project persistence/isolation;
+- file grounding + source lineage;
+- artifact persistence/revision;
+- governed Tier-1 tool/skill invocation;
+- sandbox boundary behavior;
+- API parity;
+- pinned upstream retrieval/adaptation.
+
 ## MVP acceptance gates
 
-Phase 1 is complete when a user can:
+Phase-1 MVP is complete only when all of the following are true from a clean supported deployment path:
 
-1. Open Ananas from a browser.
-2. Start or resume a project conversation.
-3. Attach files and ask questions grounded in them.
-4. Invoke a tool/skill and see a concise execution status.
-5. Generate and edit a persistent artifact beside chat.
-6. Run a sandboxed coding/data task.
-7. Route inference through the configured provider gateway without exposing provider credentials to the UI.
-8. Inspect basic latency/token/cost telemetry.
-9. Call the same core through an API.
-10. Install a vertical pack without modifying the core reasoning/runtime architecture.
+1. A user can open Ananas in a browser and establish the supported session/identity.
+2. A user can create and later resume a project.
+3. Project context is isolated from another project/tenant fixture.
+4. A user can attach a file and ask a question grounded in it with source lineage.
+5. A user can invoke an approved tool/skill and see concise execution/provenance status.
+6. A user can create, edit, close, reopen, and revise a persistent artifact beside chat.
+7. A user can run a bounded sandboxed coding/data task without exposing provider/host secrets.
+8. Inference routes through the configured provider gateway without provider credentials reaching the UI.
+9. Primary and alternate/fallback provider behavior is tested.
+10. Basic latency/token/cost/retry/outcome telemetry can be inspected.
+11. The same core workflow can be invoked through an API without duplicating product logic.
+12. A vertical-pack fixture can be installed/loaded without modifying core conversation/routing/execution architecture.
+13. CI/build/tests pass from a clean checkout.
+14. No critical security/privacy issue remains open for the MVP path.
+15. User-visible capabilities do not claim backend behavior that exists only in the prototype.
+
+## Free-MVP commercialization rule
+
+A payment gateway is common in commercial SaaS MVPs, but it is not intrinsically required for every MVP. The initial Ananas thesis is a **free/open, low-cost work engine**; therefore payment and subscription infrastructure is deliberately excluded from the Phase-1 acceptance gate.
+
+If commercialization becomes a target, billing is introduced as its own scoped capability with entitlement, abuse, privacy, tax, support, and unit-economics requirements rather than being bolted into the core prematurely.
 
 ## Product hierarchy
 
@@ -103,8 +150,8 @@ Phase 1 is complete when a user can:
 |---|---|
 | Ananas Core | Reusable conversation, context, artifacts, tools, routing, execution, API, telemetry |
 | Vertical Pack | Domain policy, skills, schemas, connectors, evaluations, workflow modules |
-| Product Surface | Specialized user experience such as DIRT Reviewer Queue |
-| Deployment | Codespaces for development; GCP for persistent/deployment workloads |
+| Product Surface | Specialized UX such as the DIRT Reviewer Queue |
+| Development/Deployment | Codespaces for development; GCP when persistence/deployment workloads justify it |
 
 ## Canonical Figma artifact
 
@@ -116,3 +163,6 @@ Pages:
 - `01 — Ananas Chat MVP`
 - `02 — DIRT Reviewer Queue`
 - `03 — No-PHI Data Contract`
+- `04 — Delivery Lifecycle & Scope`
+
+The Figma artifact is prototype/design evidence. It is not evidence that MVP backend behavior is complete.
